@@ -13,15 +13,22 @@
 # },
 
 ## 账号管理
-accounts = [
-    {
-        'user':'',
-        'CK':'',
-        'UA':''
-    },
-    {
-        'user':'',
-        'CK':'',
-        'UA':''
-    },
-]
+# accounts = [
+#     {
+#         'user':'',
+#         'CK':'',
+#         'UA':''
+#     },
+#     {
+#         'user':'',
+#         'CK':'',
+#         'UA':''
+#     },
+# ]
+import os
+cks = os.environ["HT_COOKIE"].split("&")
+## 账号管理
+accounts = []
+for ck in cks:
+    ckk=ck.split("@")
+    accounts.append({'user':ckk[0],'CK':ckk[1],'UA':ckk[2]})

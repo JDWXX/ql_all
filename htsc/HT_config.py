@@ -78,10 +78,13 @@ checkFile(fileUrlList)
 ## 提示文本
 if os.path.exists('/ql/config/auth.json'):
     logger.info("""
-鉴于青龙面板会破坏欢太CK格式，尝试修复无效，故建议使用配置文件
-该项目不再支持青龙面板`环境变量`添加账号,请将CK转移至配置文件
-青龙面板 -> 脚本管理 -> 搜索`HT_account`关键字 -> 编辑
-CK最简格式:'source_type=xxx;TOKENSID=xxx;app_param=xxx;'
+    欢太商城脚本添加方式：青龙面板 -> 环境变量 -> 添加变量 -> 添加变量
+    格式  名称：HT_COOKIE 值 user@CK@UA
+    多个账号和 JD_COOKIE 一样，添加多行
 """)
 
+# 鉴于青龙面板会破坏欢太CK格式，尝试修复无效，故建议使用配置文件
+# 该项目不再支持青龙面板`环境变量`添加账号,请将CK转移至配置文件
+# 青龙面板 -> 脚本管理 -> 搜索`HT_account`关键字 -> 编辑
+# CK最简格式:'source_type=xxx;TOKENSID=xxx;app_param=xxx;'
 ###########################################################################################

@@ -7,7 +7,7 @@
 
 '''
 cron:  16 5,12 * * * OnePlusJYStation.py
-new Env('一加加油站');
+new Env('欢太-一加加油站');
 '''
 
 import os

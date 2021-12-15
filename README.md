@@ -49,12 +49,11 @@
 ##### 命令
 
 ```
-ql repo https://github.com/Mashiro2000/HeyTapTask.git "" "Backup|index|HT.*|sendNotify" "HT.*|sendNotify"
+ql repo https://github.com/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify" "HT.*|sendNotify"
 ```
 ##### 备用命令
 ```
-ql repo https://hub.fastgit.org/JDWXX/jd_job.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp" "^jd[^_]|USER|function|utils|ZooFaker_Necklace.js|JDJRValidator_Pure|sign_graphics_validate|ql"
-
+ql repo https://hub.fastgit.org/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify" "HT.*|sendNotify"
 ```
 ##### 定时规则
 

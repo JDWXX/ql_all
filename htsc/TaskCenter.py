@@ -7,7 +7,7 @@
 
 '''
 cron:  25 5,12 * * * TaskCenter.py
-new Env('欢太任务中心');
+new Env('欢太-任务中心');
 '''
 
 import os

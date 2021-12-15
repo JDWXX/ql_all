@@ -7,7 +7,7 @@
 
 '''
 cron:  30 5,12 * * * DailyCash.py
-new Env('欢太每日现金');
+new Env('欢太-每日现金');
 '''
 
 import os

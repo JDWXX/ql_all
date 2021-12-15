@@ -7,7 +7,7 @@
 
 '''
 cron:  */30 * * * * TimingCash.py
-new Env('欢太定时现金');
+new Env('欢太-定时现金');
 '''
 
 import os
