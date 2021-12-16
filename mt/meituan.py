@@ -168,25 +168,7 @@ def getpushPlusToken():
 
 #获取token
 def gettoken():
-    if  os.path.exists(str(cwd)+r"/token.txt"):
-        file1 = open(str(cwd)+r"/token.txt", mode='r',encoding="UTF-8")
-        token = file1.readline()
-        file1.close
-        return token
-    else:
-        while True:
-
-            try:
-                print("获取token方法参考readme.md!\n")
-                token=input("请输入token:\n")
-            except:
-                pass
-            if type(token)==str  and token !="":
-                break
-        file =open(str(cwd)+r"/token.txt", mode='w+',encoding="UTF-8")
-        file.write(token)
-        file.close
-        return token
+    return os.environ["mt_token"]
 
 #获取经纬度函数并存入当前目录文本(美团活动为随机地点固定半年以上,各地大额红包概率可能不同，若长期小额，可尝试换地址或换号)
 def getlatlongitude():
