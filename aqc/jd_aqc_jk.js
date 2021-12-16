@@ -56,6 +56,7 @@ async function aqc() {
     console.log(`======== 脚本执行-北京时间(UTC+8)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}  =========`);
     // console.log("脚本默认监控E卡，如需修改别的商品，请在环境变量添加 aqcjksp ")
     if (aqcookieArr) {
+        console.log("脚本目前只监控 京东E卡50元 ");
         if(aqcookieArr.length  < 1){
             console.log("请先添加爱企查账号");
             return;
@@ -76,7 +77,6 @@ if (aqcookie) {
     } else {
         aqcookieArr.push(aqcookie);
     }
-    console.log("爱企查共:" + aqcookieArr.length + "个账号");
     aqc();
 } else {
     console.log("请手动抓取cookies");
@@ -92,11 +92,13 @@ function home(url,Cookie) {
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     data = JSON.parse(data);
-                    console.log(data)
+                    // console.log(data)
                     if(data.data.AQ03008){
                         let name = "京东E卡50元"
                         let msg = "JDWXX库为你监控的【" + name + "】有库存了，快点来兑换 https://qiye.baidu.com/usercenter#/mall"
                         await notify.sendNotify($.name, msg);
+                    }else{
+                        console.log("京东E卡50元 无库存")
                     }
                 }
             } catch (e) {
