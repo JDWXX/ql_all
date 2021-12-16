@@ -10,22 +10,11 @@ IOS/安卓: 今日头条极速版
 自定义每次运行阅读文章的数量：填到变量jrttjsbReadNum，不填默认10篇
 农场和种树任务：默认做，变量jrttjsbFarm填为 1 做 0 不做
 感谢原作者提供的脚本 https://raw.githubusercontent.com/leafxcy/JavaScript/main/jrttjsb.js
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-============Quantumultx===============
-[task_local]
-#今日头条极速版
-1-59/15 6-23 * * * https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js, tag=今日头条极速版, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
-
-================Loon==============
-[Script]
-cron "1-59/15 6-23 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js,tag=今日头条极速版
-
-===============Surge=================
-今日头条极速版 = type=cron,cronexp="1-59/15 6-23 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js
-
-============小火箭=========
-今日头条极速版 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js, cronexpr="1-59/15 6-23 * * *", timeout=3600, enable=true
 */
+
+// [task_local]
+//#今日头条极速版
+// 1-59/15 6-23 * * * https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jrttjsb.js, tag=今日头条极速版, enabled=true
 const $ = Env("今日头条极速版")
 const notifyFlag = 1; //0为关闭通知，1为打开通知,默认为1
 const logDebug = 0
