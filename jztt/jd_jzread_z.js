@@ -18,17 +18,17 @@ export jzreadurl='https://api.st615.com/v1/user/info?token=抓包的token'
 ============Quantumultx===============
 [task_local]
 #九章头条
-0 15 5,15,21 * * * https://github.com/JDWXX/jd_job/blob/master/qt/jztt/jd_jzread.js, tag=九章头条, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+0 15 5,15,21 * * * https://github.com/JDWXX/ql_all/blob/master/qt/jztt/jd_jzread.js, tag=九章头条, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 15 5,15,21 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/qt/jztt/jd_jzread.js,tag=九章头条
+cron "0 15 5,15,21 * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/qt/jztt/jd_jzread.js,tag=九章头条
 
 ===============Surge=================
-九章头条 = type=cron,cronexp="0 15 5,15,21 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/jztt/jd_jzread.js
+九章头条 = type=cron,cronexp="0 15 5,15,21 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/jztt/jd_jzread.js
 
 ============小火箭=========
-九章头条 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/jztt/jd_jzread.js, cronexpr="0 15 5,15,21 * * *", timeout=3600, enable=true
+九章头条 = type=cron,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/jztt/jd_jzread.js, cronexpr="0 15 5,15,21 * * *", timeout=3600, enable=true
 */
 const $ = new Env('九章头条');
 let status;

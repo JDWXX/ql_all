@@ -10,17 +10,17 @@
 ============Quantumultx===============
 [task_local]
 #爱企查日常任务
-0 0,30 8 * * * https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aiqicha.js, tag=爱企查日常任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+0 0,30 8 * * * https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aiqicha.js, tag=爱企查日常任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0,30 8 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aiqicha.js,tag=爱企查日常任务
+cron "0 0,30 8 * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aiqicha.js,tag=爱企查日常任务
 
 ===============Surge=================
-爱企查日常任务 = type=cron,cronexp="0 0,30 8 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aiqicha.js
+爱企查日常任务 = type=cron,cronexp="0 0,30 8 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aiqicha.js
 
 ============小火箭=========
-爱企查日常任务 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aiqicha.js, cronexpr="0 0,30 8 * * *", timeout=3600, enable=true
+爱企查日常任务 = type=cron,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aiqicha.js, cronexpr="0 0,30 8 * * *", timeout=3600, enable=true
 */
 const $ = new Env("爱企查-日常任务");
 const axios = require("axios");

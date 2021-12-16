@@ -10,17 +10,17 @@
 ============Quantumultx===============
 [task_local]
 #爱企查-监控商品
-0 0/5 * * * ? https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aqc_jk.js, tag=爱企查-监控商品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+0 0/5 * * * ? https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aqc_jk.js, tag=爱企查-监控商品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0/5 * * * ?" script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aqc_jk.js,tag=爱企查-监控商品
+cron "0 0/5 * * * ?" script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aqc_jk.js,tag=爱企查-监控商品
 
 ===============Surge=================
-爱企查-监控商品 = type=cron,cronexp="0 0/5 * * * ?",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aqc_jk.js
+爱企查-监控商品 = type=cron,cronexp="0 0/5 * * * ?",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aqc_jk.js
 
 ============小火箭=========
-爱企查-监控商品 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jd_aqc_jk.js, cronexpr="0 0/5 * * * ?", timeout=3600, enable=true
+爱企查-监控商品 = type=cron,script-path=https://github.com/JDWXX/ql_all/blob/master/qt/aqc/jd_aqc_jk.js, cronexpr="0 0/5 * * * ?", timeout=3600, enable=true
 */
 const $ = new Env("爱企查-监控商品");
 const notify = $.isNode() ? require("./sendNotify") : "";
