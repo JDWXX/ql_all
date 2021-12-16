@@ -29,8 +29,8 @@ cron "1-59/15 6-23 * * *" script-path=https://github.com/JDWXX/jd_job/blob/maste
 ============小火箭=========
 今日头条极速版 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js, cronexpr="1-59/15 6-23 * * *", timeout=3600, enable=true
 */
-const jsname = '今日头条极速版'
 const $ = Env("今日头条极速版")
+const jsname = '今日头条极速版'
 const notifyFlag = 1; //0为关闭通知，1为打开通知,默认为1
 const logDebug = 0
 
