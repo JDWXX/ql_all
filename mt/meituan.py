@@ -121,8 +121,7 @@ def getserverkey():
         while True:
             try:
 
-                print("请选择是否开启server酱推送!\n")
-                yesornot=input("是否开启server酱推送(y/n):\n")
+                yesornot=n
                 if type(yesornot)==str and  yesornot=='y':
                     print("获取serverkey请访问:https://sct.ftqq.com/\n")
                     serverkey=input("请输入serverkey:\n")
@@ -151,9 +150,7 @@ def getpushPlusToken():
     else:
         while True:
             try:
-
-                print("请选择是否开启pushPlus推送\n")
-                yesornot2=input("是否开启pushPlus推送(y/n):\n")
+                yesornot2=n
                 if type(yesornot2)==str and  yesornot2=='y':
                     print("获取pushPlusToken请访问:https://www.pushplus.plus/\n")
                     pushPlusToken=input("请输入pushPlusToken:\n")
