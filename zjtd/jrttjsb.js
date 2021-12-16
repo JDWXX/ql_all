@@ -2,16 +2,13 @@
 今日头条极速版
 IOS/安卓: 今日头条极速版
 邀请码： CYET6KHK
-
 老用户每天几毛，新用户可能收益高点
 普通版定时： 1-59/15 6-23 * * *
 激进版定时： 1-59/5 * * * *
 多用户跑的时间会久一点，自己看着改定时吧
-
 自定义UA：捉包拿到自己的UA，填到变量jrttjsbUA里，不填默认用安卓UA
 自定义每次运行阅读文章的数量：填到变量jrttjsbReadNum，不填默认10篇
 农场和种树任务：默认做，变量jrttjsbFarm填为 1 做 0 不做
-
 感谢原作者提供的脚本 https://raw.githubusercontent.com/leafxcy/JavaScript/main/jrttjsb.js
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -30,19 +27,14 @@ cron "1-59/15 6-23 * * *" script-path=https://github.com/JDWXX/jd_job/blob/maste
 今日头条极速版 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/qt/aqc/jrttjsb.js, cronexpr="1-59/15 6-23 * * *", timeout=3600, enable=true
 */
 const $ = Env("今日头条极速版")
-const jsname = '今日头条极速版'
 const notifyFlag = 1; //0为关闭通知，1为打开通知,默认为1
 const logDebug = 0
-
 //const notify = $.isNode() ? require('./sendNotify') : '';
 let notifyStr = ''
-
 let rndtime = "" //毫秒
 let httpResult //global buffer
-
 let host = 'i.snssdk.com'
 let hostname = 'https://' + host
-
 let userAgent = ($.isNode() ? process.env.jrttjsbUA : $.getdata('jrttjsbUA')) || 'Dalvik/2.1.0 (Linux; U; Android 7.1.2; VOG-AL10 Build/HUAWEIVOG-AL10) NewsArticle/8.2.8 tt-ok/3.10.0.2';
 let userAgentArr = []
 let userHeader = ($.isNode() ? process.env.jrttjsbHeader : $.getdata('jrttjsbHeader')) || '';
@@ -90,7 +82,7 @@ function showUpdateMsg() {
 //通知
 async function showmsg() {
 
-    notifyBody = jsname + "运行通知\n\n" + notifyStr
+    notifyBody = $.name + "运行通知\n\n" + notifyStr
 
     if (notifyFlag != 1) {
         console.log(notifyBody);
@@ -111,11 +103,11 @@ async function GetRewrite() {
                 userHeader = userHeader + '@' + userCK
                 $.setdata(userHeader, 'jrttjsbHeader');
                 ckList = userHeader.split('@')
-                $.msg(jsname+` 获取第${ckList.length}个jrttjsbHeader成功: ${userCK}`)
+                $.msg($.name+` 获取第${ckList.length}个jrttjsbHeader成功: ${userCK}`)
             }
         } else {
             $.setdata(userCK, 'jrttjsbHeader');
-            $.msg(jsname+` 获取第1个jrttjsbHeader成功: ${userCK}`)
+            $.msg($.name+` 获取第1个jrttjsbHeader成功: ${userCK}`)
         }
     }
 }
