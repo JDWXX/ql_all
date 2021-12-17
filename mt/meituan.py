@@ -60,17 +60,18 @@ webhook = ""
 #定义全局变量并初始化 以下初始化赋值的变量不要改！！！！
 global propIdforuse
 showPriceNumber = "1"
-wm_latitude =1.0
-wm_longitude=1.0
+wm_latitude =0
+wm_longitude=0
+propId=5
+exchangeCoinNumber=1800
 token =""
-propId=1
-exchangeCoinNumber=1.0
 serverkey=""
 pushPlusToken = ""
 yesornot = ""
 yesornot2 = ""
 propIdforuse =2
 cwd = os.path.dirname(os.path.realpath(__file__))
+
 
 ##############################################################################
 ##标记这四类红包数量不为空，用来在有10元以上必中符时循环判断红包池余量抢购大额元红包，若您不需该功能，请自行将下一行的1改为0
@@ -85,6 +86,34 @@ thirty_left=0
 fifty_left=0
 
 
+token = ""
+wm_latitude = "30657401"
+wm_longitude = "104065827"
+# 获取美团token
+if "mt_token" in os.environ:
+    if len(os.environ["mt_token"]) > 1:
+        token = os.environ["mt_token"]
+        print("已获取并使用环境变量中 mt_token")
+# 获取美团领取红包纬度
+if "mt_latitude" in os.environ:
+    if len(os.environ["mt_latitude"]) > 1:
+        wm_latitude = os.environ["mt_latitude"]
+        print("已获取并使用环境变量中纬度 mt_latitude :" + wm_latitude)
+# 获取美团领取红包经度
+if "mt_longitude" in os.environ:
+    if len(os.environ["mt_longitude"]) > 1:
+        wm_longitude = os.environ["mt_longitude"]
+        print("已获取并环境变量中经度 mt_longitude :" + wm_longitude)
+if(token == ''):
+    print("未获取到环境变量中的 mt_token")
+    sys.exit(1)
+if(wm_latitude == 0):
+    print("未获取到环境中纬度 mt_latitude")
+    sys.exit(1)
+if(wm_longitude == 0):
+    print("未获取到环境中经度 mt_longitude")
+    sys.exit(1)
+
 #将print内容同步写到output.txt文件
 class Logger(object):
     def __init__(self, fileN='Default.log'):
@@ -98,96 +127,6 @@ class Logger(object):
 
     def flush(self):
         pass
-
-
-
-
-
-
-###获取serverkey
-def getserverkey():
-    global yesornot
-    global serverkey
-    if  os.path.exists(str(cwd)+r"/serverkey.txt"):
-        # file1 = open(r"./token.txt", mode='r',encoding="UTF-8")
-        # token = file1.readline()
-        # file1.close
-        if os.path.getsize(str(cwd)+r"/serverkey.txt")!=0:
-            yesornot = "y"
-        else:
-            yesornot = "n"
-        return -1
-    else:
-        while True:
-            try:
-
-                yesornot=n
-                if type(yesornot)==str and  yesornot=='y':
-                    print("获取serverkey请访问:https://sct.ftqq.com/\n")
-                    serverkey=input("请输入serverkey:\n")
-            except:
-                pass
-            if type(yesornot)==str and (yesornot =="n" or yesornot=='y'):
-                break
-        file =open(str(cwd)+r"/serverkey.txt", mode='w+',encoding="UTF-8")
-        file.write(serverkey)
-        file.close
-
-
-###获取pushPlusToken
-def getpushPlusToken():
-    global yesornot2
-    global pushPlusToken
-    if  os.path.exists(str(cwd)+r"/pushPlusToken.txt"):
-        # file1 = open(r"./token.txt", mode='r',encoding="UTF-8")
-        # token = file1.readline()
-        # file1.close
-        if os.path.getsize(str(cwd)+r"/pushPlusToken.txt")!=0:
-            yesornot2 = "y"
-        else:
-            yesornot2 = "n"
-        return -1
-    else:
-        while True:
-            try:
-                yesornot2=n
-                if type(yesornot2)==str and  yesornot2=='y':
-                    print("获取pushPlusToken请访问:https://www.pushplus.plus/\n")
-                    pushPlusToken=input("请输入pushPlusToken:\n")
-            except:
-                pass
-            if type(yesornot2)==str and (yesornot2 =="n" or yesornot2=='y'):
-                break
-        file =open(str(cwd)+r"/pushPlusToken.txt", mode='w+',encoding="UTF-8")
-        file.write(pushPlusToken)
-        file.close
-
-
-
-
-
-#获取token
-def gettoken():
-    return os.environ["mt_token"]
-
-#获取经纬度函数并存入当前目录文本(美团活动为随机地点固定半年以上,各地大额红包概率可能不同，若长期小额，可尝试换地址或换号)
-def getlatlongitude():
-    if os.path.exists(str(cwd)+r"/wm_latitudewm_longitude.txt"):
-        return -1
-    else:
-        while True:
-
-            try:
-                print("若您不知道🙏限时抢红包开放城市，可试各地省会,如成都(30657401,104065827)\n")
-                wm_latitude=eval(input("请输入去除小数点的纬度(如30657401):\n"))
-                wm_longitude=eval(input("请输入去除小数点的经度(如104065827):\n"))
-            except:
-                pass
-            if type(wm_latitude)==int and type(wm_longitude)==int :
-                break
-        file =open(str(cwd)+r"/wm_latitudewm_longitude.txt", mode='w+',encoding="UTF-8")
-        file.write(str(wm_latitude)+"\n"+str(wm_longitude))
-        file.close
 
 #定义一个云端查询必中符库中所有的propId 和needNumber 的函数，并传给getpropId_Coninnumber()函数作为用户输入参考提示
 def myredbean(token):
@@ -221,66 +160,53 @@ def myredbean(token):
 
 #定义获得需要兑换的必中符道具类型和兑换所需的豆子
 def getpropId_Coinnumber(token):
-    if  os.path.exists(str(cwd)+r"/propId_Coinnumbe.txt"):
-        return -1
-    else:
-        while True:
-            myredbean(token)
-            try:
-                propId=eval(input("请输入所需要兑换道具的propId(推荐填写5):\n"))
-                exchangeCoinNumber=eval(input("请输入propId对应某类必中符所需的豆子数量(推荐填写1800):\n"))
-            except:
-                pass
-            if type(propId)==int and type(exchangeCoinNumber)==int  :
-                if propId == 2 or propId == 4 or propId == 5:
-                    if exchangeCoinNumber ==500 or exchangeCoinNumber ==1000 or exchangeCoinNumber ==1800 :
-                        break
-        file =open(str(cwd)+r"/propId_Coinnumbe.txt", mode='w+',encoding="UTF-8")
-        file.write(str(propId)+"\n"+str(exchangeCoinNumber))
-        file.close
-
+    myredbean(token)
+    # propId=eval(input("请输入所需要兑换道具的propId(推荐填写5):\n"))
+    # exchangeCoinNumber=eval(input("请输入propId对应某类必中符所需的豆子数量(推荐填写1800):\n"))
+    propId=5
+    exchangeCoinNumber=1800
 #定义从文本文件中获取存入变量的函数,第二次运行时不用输入，若需改变经纬度和token，则直接删除文件即可
-def getVar():
-    if not os.path.exists(str(cwd)+r"/wm_latitudewm_longitude.txt"):
-        print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
-        os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
-        os.remove(str(cwd)+r"/token.txt")
-        os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
-        os.remove(str(cwd)+r"/serverkey.txt")
-        os.remove(str(cwd)+r"/pushPlusToken.txt")
-        sys.exit(0)
-    file1 = open(str(cwd)+r"/wm_latitudewm_longitude.txt", mode='r',encoding="UTF-8")
-    wm_latitude  = int(file1.readline())
-    wm_longitude = int(file1.readline())
-    file1.close()
-
-    file2 = open(str(cwd)+r"/token.txt", mode='r',encoding="UTF-8")
-    if not os.path.exists(str(cwd)+r"/token.txt"):
-        print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
-        os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
-        os.remove(str(cwd)+r"/token.txt")
-        os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
-        os.remove(str(cwd)+r"/serverkey.txt")
-        os.remove(str(cwd)+r"/pushPlusToken.txt")
-        sys.exit(0)
-    token  = file2.readline()
-    file2.close()
-
-    if not os.path.exists(str(cwd)+r"/propId_Coinnumbe.txt"):
-        print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
-        os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
-        os.remove(str(cwd)+r"/token.txt")
-        os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
-        os.remove(str(cwd)+r"/serverkey.txt")
-        os.remove(str(cwd)+r"/pushPlusToken.txt")
-        sys.exit(0)
-    file3 = open(str(cwd)+r"/propId_Coinnumbe.txt", mode='r',encoding="UTF-8")
-    propId  = int(file3.readline())
-    exchangeCoinNumber = int(file3.readline())
-    file3.close()
-
-
-    return wm_latitude,wm_longitude,token,propId,exchangeCoinNumber
+# def getVar():
+#     if not os.path.exists(str(cwd)+r"/wm_latitudewm_longitude.txt"):
+#         print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
+#         os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
+#         os.remove(str(cwd)+r"/token.txt")
+#         os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
+#         os.remove(str(cwd)+r"/serverkey.txt")
+#         os.remove(str(cwd)+r"/pushPlusToken.txt")
+#         sys.exit(0)
+#     file1 = open(str(cwd)+r"/wm_latitudewm_longitude.txt", mode='r',encoding="UTF-8")
+#     wm_latitude  = int(file1.readline())
+#     wm_longitude = int(file1.readline())
+#     file1.close()
+#
+#     file2 = open(str(cwd)+r"/token.txt", mode='r',encoding="UTF-8")
+#     if not os.path.exists(str(cwd)+r"/token.txt"):
+#         print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
+#         os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
+#         os.remove(str(cwd)+r"/token.txt")
+#         os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
+#         os.remove(str(cwd)+r"/serverkey.txt")
+#         os.remove(str(cwd)+r"/pushPlusToken.txt")
+#         sys.exit(0)
+#     token  = file2.readline()
+#     file2.close()
+#
+#     if not os.path.exists(str(cwd)+r"/propId_Coinnumbe.txt"):
+#         print("程序运行中配置文件异常,文件或者权限异常,已自动为您删除脚本目录下所有已生成的txt文档并停止程序!\n")
+#         os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
+#         os.remove(str(cwd)+r"/token.txt")
+#         os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
+#         os.remove(str(cwd)+r"/serverkey.txt")
+#         os.remove(str(cwd)+r"/pushPlusToken.txt")
+#         sys.exit(0)
+#     file3 = open(str(cwd)+r"/propId_Coinnumbe.txt", mode='r',encoding="UTF-8")
+#     propId  = int(file3.readline())
+#     exchangeCoinNumber = int(file3.readline())
+#     file3.close()
+#
+#
+#     return wm_latitude,wm_longitude,token,propId,exchangeCoinNumber
 
 
 ##获得pushPlusToken
@@ -320,9 +246,6 @@ def serverkeyvar():
 
 #定义获取batchId的函数
 def getbatchId(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
-    print("**开始执行获取batchId脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_ctype="+wm_ctype+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token
     url_getbatchId = baseurl+r"/cfeplay/playcenter/batchgrabred/corepage"
     request =urllib.request.Request(url_getbatchId,headers=head,data=datas.encode("utf-8"),method="POST")
@@ -330,8 +253,6 @@ def getbatchId(token):
         response = urllib.request.urlopen(request,timeout=10)
         result = response.read().decode("utf-8")
         result2 = json.loads(result)
-        # print(result2)
-        # print(result2["code"])
         if(result2["code"]==0):
             if "batchId" in result2["data"]:
                 print("batchId:%s\n"%(result2["data"]["batchId"]))
@@ -339,13 +260,8 @@ def getbatchId(token):
             else:
                 print("获取batchId失败👀，当前非限时抢红包时间段,无法进行下一步，但已为您签到完毕🙏!\n")
                 sys.exit(0)
-
         elif (result2["code"]==1):
             print("%s,接口需提交的token参数已改变👀,请重新运行一遍脚本！\n"%(result2["msg"]))
-            os.remove(str(cwd)+r"/wm_latitudewm_longitude.txt")
-            os.remove(str(cwd)+r"/token.txt")
-            os.remove(str(cwd)+r"/propId_Coinnumbe.txt")
-            os.remove(str(cwd)+r"/serverkey.txt")
             sys.exit(0)
         else:
             print("获取batchId错误👀，请检查网络，否则为接口失效！\n")
@@ -393,8 +309,6 @@ def signForBeans(token):
 
 #def 限时抢红包函数
 def drawlottery(batchId,token,propIdforuse):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行限时抢天天神券脚本🧧:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token+"&batchId="+batchId+"&isShareLink=true"+"&propType=1"+"&propId="+str(propIdforuse)
     url_drawlottery = baseurl+r"/cfeplay/playcenter/batchgrabred/drawlottery"
@@ -431,8 +345,6 @@ def drawlottery(batchId,token,propIdforuse):
 
 #定义接受红包函数，获得红包小于5元时，不执行此函数，并调用redtobean函数自动将红包转为红包豆，若两个函数都不执行，在抢红包成功5分钟左右红包会自动发放到账户
 def acceptRed(batchId,token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行发放天天神券🧧到红包库脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token+"&batchId="+batchId
     url_acceptRed = baseurl+r"/cfeplay/playcenter/batchgrabred/acceptRed"
@@ -461,8 +373,6 @@ def acceptRed(batchId,token):
 
 #定义红包转红包豆函数，将小于5元的红包转为红包豆
 def redtobean(batchId,token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**默认尝试执行面值小于5元🧧自动转红包豆脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token+"&batchId="+batchId
     url_drawlottery = baseurl+r"/cfeplay/playcenter/batchgrabred/redToBean"
@@ -490,13 +400,8 @@ def redtobean(batchId,token):
 
             print(e,"reason")
 
-
-
-
 #查询已领取到的天天神券
 def querymyreward(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行查询已领天天神券🧧脚本:**\n")
     datas = "parActivityId="+parActivityId+"&token="+token
     url_querymyreward = baseurl+r"/cfeplay/playcenter/batchgrabred/myreward"
@@ -505,8 +410,6 @@ def querymyreward(token):
         response = urllib.request.urlopen(request,timeout=10)
         result = response.read().decode("utf-8")
         result2 = json.loads(result)
-        # print(result2)
-        # print(result2["code"])
         if(result2["code"]==0 and len(result2["data"]["myawardInfos"])):
             print("👴开始遍历红包库:\n")
             print("红包库详细信息:\n")
@@ -549,8 +452,6 @@ def querymyreward(token):
 
 #获取每日浏览天天神券奖励的30豆
 def sendTaskRedBean(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行领取每日30豆的脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token+"&portraitId="+str(portraitId)
     url_sendTaskRedBean = baseurl+r"/cfeplay/playcenter/batchgrabred/sendTaskRedBean"
@@ -577,8 +478,6 @@ def sendTaskRedBean(token):
 
 #定义每日签到得必中符函数
 def doAction(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行每日签到领必中符🧧的脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token+"&action=SiginInGetProp"
     url_doaction = baseurl+r"/cfeplay/playcenter/batchgrabred/doAction"
@@ -606,8 +505,6 @@ def doAction(token):
 #查看道具库中的必中符记录
 def querymyProps(token):
     global propIdforuse
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行查询道具库中必中符🧧详情的脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token
     url_querymyprops = baseurl+r"/cfeplay/playcenter/batchgrabred/myProps"
@@ -664,22 +561,14 @@ def querymyProps(token):
 # parActivityId=Gh1tkq-wvFU2xEP_ZPzHPQ&wm_latitude=30657401&wm_longitude=104065827
 
 
-
-
-
-
-
 #定义豆子兑换成必中符函数:
-def exchange(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
-    wm_actual_latitude = str(wm_latitude)
-    wm_actual_longitude =str(wm_longitude)
-    propId = getVar()[3]
-    exchangeCoinNumber = getVar()[4]
+def exchange(token,propId):
     print("**开始执行每日豆子兑换必中符脚本**:\n")
     while(1):
-        datas = "wm_actual_longitude="+wm_actual_longitude+"&wm_actual_latitude="+wm_actual_latitude+"&exchangeRuleId=&propId="+str(propId)+"&exchangeCoinNumber="+str(exchangeCoinNumber)+"&parActivityId="+parActivityId+"&wm_ctype="+wm_ctype+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+token
+        datas = "wm_actual_longitude="+wm_longitude+"&wm_actual_latitude="+wm_latitude+ \
+                "&exchangeRuleId=&propId="+str(propId)+"&exchangeCoinNumber="+str(exchangeCoinNumber)+ \
+                "&parActivityId="+parActivityId+"&wm_ctype="+wm_ctype+"&wm_latitude="+str(wm_latitude)+ \
+                "&wm_longitude="+str(wm_longitude)+"&token="+token
         url_exchange = baseurl+r"/cfeplay/playcenter/batchgrabred/exchange"
         request =urllib.request.Request(url_exchange,headers=head,data=datas.encode("utf-8"),method="POST")
         try:
@@ -716,8 +605,6 @@ def exchange(token):
 
 ###定义查询豆子详情的函数
 def myRedBeanRecords(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行查询豆子变化详情参数脚本**:\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+str(token)+"&userPortraitId="+str(portraitId)+"&pageNum=1"
     url_myredbeanRecords = baseurl+r"/cfeplay/playcenter/batchgrabred/myRedBeanRecords"
@@ -747,13 +634,8 @@ def myRedBeanRecords(token):
         if hasattr(e,"reason"):
             print(e,"reason")
 
-
-
-
-        #定义查询红包池函数
+#定义查询红包池函数
 def queryredpool(token):
-    wm_latitude = getVar()[0]
-    wm_longitude = getVar()[1]
     print("**开始执行查询红包池详情脚本:**\n")
     datas = "parActivityId="+parActivityId+"&wm_latitude="+str(wm_latitude)+"&wm_longitude="+str(wm_longitude)+"&token="+str(token)+"&wm_ctype="+wm_ctype
     url_myredbeanRecords = baseurl+r"/cfeplay/playcenter/batchgrabred/corepage"
@@ -791,7 +673,7 @@ def queryredpool(token):
         if hasattr(e,"reason"):
             print(e,"reason")
 
-        #定义pushPlus的消息推送函数
+#定义pushPlus的消息推送函数
 def pushPlus():
     global webhook
     pushPlusToken = pushPlusTokenvar()
@@ -823,71 +705,16 @@ def pushPlus():
         if hasattr(e,"reason"):
             print(e,"reason")
 
-        #定义server 酱的消息推送函数
-def serverjiang():
-    serverkey = serverkeyvar()
-    if not os.path.exists(str(cwd)+r"/output.txt"):
-        print("output.txt文件异常,推送退出！🙌")
-        return -1
-    file4= open(str(cwd)+r"/output.txt", mode='r',encoding="UTF-8")
-    message = str(file4.read())
-    file4.close
-    pushurl="https://sctapi.ftqq.com/"
-    head_server ={"Host": "sctapi.ftqq.com","User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Mobile Safari/537.36","content-type":"application/x-www-form-urlencoded"}
-    url_serverkey = pushurl+serverkey+".send"
-    print("**开始执行server酱推送脚本:**\n")
-    datas=bytes(urllib.parse.urlencode({"title":"天天神券推送","desp":message,"channel":""}),encoding="UTF-8")
-    request =urllib.request.Request(url_serverkey,headers=head_server,data=datas,method="POST")
-    try:
-        response = urllib.request.urlopen(request,timeout=30)
-        result = response.read().decode("utf-8")
-        result2 = json.loads(result)
-        if(result2["code"]==0) :
-            pushid = result2["data"]["pushid"]
-            readkey = result2["data"]["readkey"]
-            url_checkurl = pushurl+"push?id="+pushid+"&readkey="+readkey
-            request2 = urllib.request.Request(url_checkurl,headers=head_server,data=datas)
-            try:
-                response2 = urllib.request.urlopen(request2,timeout=30)
-                text=json.loads(response2.read().decode("utf-8"))
-                if(text["data"]["title"] =="天天神券推送"):
-                    print("server酱推送成功😄！请在移动设备端查看\n")
-                else:
-                    print("server酱推送失败👀，请检查serverkey是否正确！\n")
-
-            except urllib.error.URLError as e2:
-                if hasattr(e2,"code"):
-                    print("脚本执行失败👀，错误代码如下:\n")
-                print(e2.code)
-                if hasattr(e2,"reason"):
-                    print(e2,"reason")
-        else:
-            print("请求接口失效或参数异常，建议重置参数!\n")
-    except  urllib.error.URLError as e:
-        if  hasattr(e,"code"):
-            print("脚本执行失败，错误代码如下:\n")
-            print(e.code)
-        if hasattr(e,"reason"):
-            print(e,"reason")
-
-def main():
+def main(token,propId):
     global propIdforuse
     temp = sys.stdout
-    print("本脚本提供pushPlus、serverkey这两种推送方式,可以二选一或者全选，首次运行脚本请依次选择是否开启对应推送!\n由于server酱每日免费限额5条,若需开启推送,请首选pushPlus!\n")
-    getpushPlusToken()
-    getserverkey()
-    token = gettoken()
-    getlatlongitude()
-    getpropId_Coinnumber(token)
-    sys.stdout = Logger(str(cwd)+r'/output.txt')
-    token = getVar()[2]
     signForBeans(token)
-    #
+
     queryredpool(token)
     batchId = getbatchId(token)
     ##先去保持每天签到 以获得必中符或者豆子
     doAction(token)
-    exchange(token)
+    exchange(token,propId)
     querymyProps(token)
     #定义bool类型变量判断当前时间段是不是自定义的大额抢红包时间段
     istimeforbig1= (n_time <=d_time4) and(n_time>=d_time3)
@@ -950,7 +777,6 @@ def main():
                 print("**当前符合抢30元以上大额红包的条件**\n")
                 print("**正使用10元必中符为您尝试抢30元以上的红包**\n")
                 ##拥有10块以上的必中符，先等待着试图抢30,要是10和15都没了，就直接去抢30的红包，或许有可能抢到50
-
                 while  fifteen ==1 :
                     if(thirty ==1 and fifty ==1 ):
                         print("&15有剩余，30元已被抢完，50元已被抢完，跳出监测，正在为您抢保底15元红包！*\n")
@@ -981,20 +807,18 @@ def main():
     querymyProps(token)
     myRedBeanRecords(token)
     sys.stdout = temp
-    if(yesornot2 == "y"):
-        pushPlus()
-    else:
-        print("您已默认关闭pushPlus推送!若需开启,请将pushPlusToken 填入本脚本目录下的pushPlusToken.txt文本中!\n")
-
-    if(yesornot == "y"):
-        if n_time>d_time0:
-            serverjiang()
-        else:
-            print("当前时间段非抢红包时间,默认关闭server酱推送以节约server酱每日5条推送的限额！")
-    else:
-        print("您已默认关闭server酱推送!若需开启,请将serverkey 填入本脚本目录下的serverkey.txt文本中!\n")
-
-
 
 if __name__ == "__main__":
-    main()
+    tokens = token.split('@')
+    u = 1
+    print(f"\n【更新代码】https://github.com/JDWXX/ql_all.git")
+    print(f"\n【使用教程】http://cxgc.top")
+    for token in tokens:
+        try:
+            token = token.split('token2=')[1].split(";")[0]
+            print(f"\n## 执行第【{u}】个账号\n")
+            main(token,propId)
+            u += 1
+        except Exception as e:
+            print(f"运行时出现特殊错误，本次运行终止")
+            sys.exit(1)
