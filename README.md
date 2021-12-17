@@ -49,11 +49,11 @@
 ##### 命令
 
 ```
-ql repo https://github.com/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify" "HT.*|sendNotify"
+ql repo https://github.com/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify|ql" "HT.*|sendNotify|ql"
 ```
 ##### 备用命令
 ```
-ql repo https://hub.fastgit.org/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify" "HT.*|sendNotify"
+ql repo https://hub.fastgit.org/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotify|ql" "HT.*|sendNotify|ql"
 ```
 ##### 定时规则
 
