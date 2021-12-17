@@ -1,6 +1,14 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#author:fugui
+# @Time    : 2021/9/12
+# @Author  : MashiroF
+# @File    : TaskCenter.py
+# @Software: PyCharm
+
+'''
+cron:  0 0 0-3 * * ? meituan.py
+new Env('美团');
+'''
 
 from typing import Text
 import urllib.request
