@@ -1,4 +1,15 @@
-# -*- coding: utf8 -*-
+# !/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# @Time    : 2021/9/12
+# @Author  : MashiroF
+# @File    : TaskCenter.py
+# @Software: PyCharm
+
+'''
+cron:  0 20 6 * * ? xiaomibushu.py
+new Env('小米运动');
+'''
+
 import requests
 import time
 import re
@@ -139,10 +150,10 @@ def push_wx(sckey, desp=""):
             "text": '小米运动 步数修改',
             "desp": desp
         }
- 
+
         response = requests.get(server_url, params=params)
         json_data = response.json()
- 
+
         if json_data['errno'] == 0:
             print(f"[{now}] 推送成功。")
         else:
@@ -161,10 +172,10 @@ def push_server(sckey, desp=""):
             "title": '小米运动 步数修改',
             "desp": desp
         }
- 
+
         response = requests.get(server_url, params=params)
         json_data = response.json()
- 
+
         if json_data['code'] == 0:
             print(f"[{now}] 推送成功。")
         else:
