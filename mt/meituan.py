@@ -6,7 +6,7 @@
 # @Software: PyCharm
 
 '''
-cron:  0 0 0-3 * * * meituan.py
+cron:  0 20 1,4,7,11,13,16,19 * * ? meituan.py
 new Env('美团');
 '''
 
