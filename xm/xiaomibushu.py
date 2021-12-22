@@ -7,7 +7,7 @@
 
 '''
 cron:  0 20 6 * * ? xiaomibushu.py
-new Env('小米运动');
+new Env('小米运动刷步数');
 '''
 
 import requests
@@ -299,7 +299,7 @@ if "xm_user_password" in os.environ:
 
 if "xiaomi_step" in os.environ:
     if len(os.environ["xiaomi_step"]) > 1:
-        cookies = os.environ["xiaomi_step"]
+        step = os.environ["xiaomi_step"]
         print("已获取并使用环境变量中 xiaomi_step")
 
 if(cookies == ''):
@@ -318,9 +318,9 @@ if __name__ == '__main__':
     for cookie in cookies:
         try:
             user = cookie.split('&')
-            print(f"\n## 执行第【{u}】个账号\n")
-            start(user[0],user[1],step)
+            print(f"\n## 执行【{user[0]}】账号\n")
+            start(user[0],user[1],int(step))
             u += 1
         except Exception as e:
-            print(f"运行时出现特殊错误，本次运行终止")
+            print(f"运行时出现错误，本次运行终止")
             sys.exit(1)
