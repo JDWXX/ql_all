@@ -1,6 +1,19 @@
 
-# [完整使用教程](http://cxgc.top/)
+# [全部脚本使用教程](http://cxgc.top/)
 
+## 目录介绍
+
+#### aqc 爱企查
+#### daw 都爱玩
+#### htsc 欢太商城
+#### jkd 聚看点
+#### jztt 九章头条
+#### ks 快手极速版
+#### mt 美团
+#### qsk 全球购骑士特权
+#### tzxg 腾讯自选股
+#### xm 小米运动刷步数
+#### zjtd 今日头条极速版
 
 ## 特别声明:
 
@@ -60,15 +73,3 @@ ql repo https://hub.fastgit.org/JDWXX/ql_all.git "" "Backup|index|HT.*|sendNotif
 ```
 0 0 1,10,15 * * *
 ```
-
-## 目录介绍
-
-#### aqc 爱企查
-#### htsc 欢太商城
-#### jkd 聚看点
-#### jztt 九章头条
-#### ks 快手极速版
-#### mt 美团
-#### qsk 全球购骑士特权
-#### xm 小米运动刷步数
-#### zjtd 今日头条极速版
