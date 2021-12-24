@@ -24,11 +24,11 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 message = ""
 
 
-let zqwzbody= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zqwzbody= $.isNode() ? (process.env.zqwzbody ? process.env.zqwzbody : "") : ($.getdata('zqwzbody') ? $.getdata('zqwzbody') : "")
 let zqwzbodyArr = []
 let zqwzbodys = ""
 
-let zq_timebody= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zq_timebody= $.isNode() ? (process.env.zqTimebody ? process.env.zqTimebody : "") : ($.getdata('zqTimebody') ? $.getdata('zqTimebody') : "")
 let zq_timebodyArr = []
 let zq_timebodys = ""
 let zqwznum
