@@ -1,43 +1,37 @@
 /*
 APP：全球购骑士特权
-
 直接appstore搜索下载，方便的话可以微信扫下面图片二维码走邀请注册，谢谢
-https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.jpg
-
-定时为每小时一次，务必在0分到5分之间运行，目前只写了每日领勋章和领取存钱罐的任务，大概每天3毛
+http://cxgc.top/upload/2021/12/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20211224100317-f9b9952ead0145e2b295db8454cd839d.jpg
+定时为每小时一次，务必在0分到5分之间运行，目前每天大概1毛7
 提现需要关注微信公众号，在公众号里申请提现
 请手动点一下签到页面的【收零花钱】领一次金币，去【果园】里选择水果种子
-只测试了IOS的青龙和V2P，暂不支持多账号
-
 青龙：
-捉https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo?的包，获得appId
-捉https://pyp-api.chuxingyouhui.com/api/app/userCenter/v1/info的包，获得其他header
+捉https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo 接口
+再从 URL里找到 xxxx?appid=一串数字
 然后填在blackJSON里面，注意按照JSON格式填写。用青龙面板的环境变量或者外面用双引号的，字符串内需要用\"转义
-export blackJSON='{"black-token":"", "token":"", "User-Agent":"", "device-value":"", "device-type":"", "phpUserId":"", "appId":""}'
+export blackJSON='{"black-token":"", "token":"", "User-Agent":"", "appId":""}'
 
 V2P，圈X：重写方法 -- 点击右下角【我的】-> 【每日签到赚现金】
 [task_local]
 #全球购骑士特权
 0 * * * * https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js, tag=全球购骑士特权, enabled=true
 [rewrite_local]
-https://pyp-api.chuxingyouhui.com/api/app/userCenter/v1/info url script-request-header https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js
 https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo? url script-request-header https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js
 [MITM]
-hostname = *.chuxingyouhui.com
-
+hostname = market.chuxingyouhui.com
 */
-const $ = Env("全球购骑士特权")
+
+const $ = Env('全球购骑士特权')
+const jsname = '全球购骑士特权'
 const notifyFlag = 1; //0为关闭通知，1为打开通知,默认为1
 const logDebug = 0
-const jsname = '全球购骑士特权'
 
 //const notify = $.isNode() ? require('./sendNotify') : '';
 let notifyStr = ''
+let blackJSON= $.isNode() ? (process.env.blackJSON ? process.env.blackJSON : "") : ($.getdata('blackJSON') ? $.getdata('blackJSON') : "")
+let blackArr = []
 
-let blankJSON = {"black-token":"", "token":"", "User-Agent":"", "device-value":"", "device-type":"", "phpUserId":"", "appId":""}
-let blackJSONStr = ($.isNode() ? (process.env.blackJSON) : ($.getval('blackJSON'))) || ''
-let blackJSON = blackJSONStr ? JSON.parse(blackJSONStr) : blankJSON
-
+let userIdx = 0
 let reqTime = ''
 let userSign = ''
 let redPacketId = ''
@@ -47,7 +41,7 @@ let activityId = ''
 let redPacketCount = 0
 let waterCount = 0
 let fertilizerCount = 0
-let clickTreeTimes = 5
+let clickTreeTimes = 1
 let signRetryTimes = 3
 let signRetryCount = 0
 
@@ -73,29 +67,22 @@ let rndtime = "" //毫秒
 
         console.log('\n提现需要关注微信公众号，在公众号里申请提现')
 
-        await querySignStatus()
-
-        await listUserTask()
-
-        //await listRedPacket()
-
-        await queryPiggyInfo()
-
-        //翻卡看视频需要前置条件
-        //await getUserFlopRecord()
-
-        await userFruitDetail()
-
-        await waterTaskList()
-
-        await nutrientTaskList()
-
-        await userFertilizerDetail()
-
-        await getTreeCoupon()
-
-        await userInfo()
-
+        for(userIdx=0; userIdx<blackArr.length; userIdx++) {
+            console.log(`\n===== 开始用户${userIdx+1} =====`)
+            await querySignStatus()
+            await listUserTask()
+            //await listRedPacket()
+            //收取存钱罐看视频需要前置条件
+            //await queryPiggyInfo()
+            //翻卡看视频需要前置条件
+            //await getUserFlopRecord()
+            await userFruitDetail()
+            await waterTaskList()
+            await nutrientTaskList()
+            await userFertilizerDetail()
+            await getTreeCoupon()
+            await userInfo()
+        }
         await showmsg()
     }
 
@@ -121,57 +108,60 @@ async function showmsg() {
 
 async function getRewrite()
 {
-    if($request.url.indexOf("userCenter/v1/info") > -1) {
-        if($request.headers['black-token']) {
-            blackJSON['black-token'] = $request.headers['black-token']
-            $.log(`获取到black-token: ${blackJSON['black-token']}`)
-            $.msg(`获取到black-token: ${blackJSON['black-token']}`)
-        }
-        if($request.headers['token']) {
-            blackJSON['token'] = $request.headers['token']
-            $.log(`获取到token: ${blackJSON['token']}`)
-            $.msg(`获取到token: ${blackJSON['token']}`)
-        }
-        if($request.headers['User-Agent']) {
-            blackJSON['User-Agent'] = $request.headers['User-Agent']
-            $.log(`获取到User-Agent: ${blackJSON['User-Agent']}`)
-            $.msg(`获取到User-Agent: ${blackJSON['User-Agent']}`)
-        }
-        if($request.headers['device-value']) {
-            blackJSON['device-value'] = $request.headers['device-value']
-            $.log(`获取到device-value: ${blackJSON['device-value']}`)
-            $.msg(`获取到device-value: ${blackJSON['device-value']}`)
-        }
-        if($request.headers['device-type']) {
-            blackJSON['device-type'] = $request.headers['device-type']
-            $.log(`获取到device-type: ${blackJSON['device-type']}`)
-            $.msg(`获取到device-type: ${blackJSON['device-type']}`)
-        }
-        if($request.headers['phpUserId']) {
-            blackJSON['phpUserId'] = $request.headers['phpUserId']
-            $.log(`获取到phpUserId: ${blackJSON['phpUserId']}`)
-            $.msg(`获取到phpUserId: ${blackJSON['phpUserId']}`)
-        }
-        $.setdata(JSON.stringify(blackJSON),'blackJSON')
-    }
-
     if($request.url.indexOf("mqq/api/indexTopInfo?appId=") > -1) {
-        blackJSON['appId'] = $request.url.match(/appId=([\w]+)/)[1]
-        $.log(`获取到appId: ${blackJSON['appId']}`)
-        $.msg(`获取到appId: ${blackJSON['appId']}`)
-        $.setdata(JSON.stringify(blackJSON),'blackJSON')
+        let blackCk = {"black-token":"", "token":"", "User-Agent":"", "appId":""}
+        let msgStr = ''
+
+        let matchItem = $request.url.match(/appId=([\w]+)/)
+        blackCk['appId'] = matchItem[1]
+        msgStr += `获取到appId: ${blackCk['appId']}\n`
+
+        blackCk['black-token'] = $request.headers['black-token']
+        msgStr += `获取到black-token: ${blackCk['black-token']}\n`
+
+        blackCk['token'] = $request.headers['token']
+        msgStr += `获取到token: ${blackCk['token']}\n`
+
+        blackCk['User-Agent'] = $request.headers['User-Agent']
+        msgStr += `获取到User-Agent: ${blackCk['User-Agent']}\n`
+
+        if(blackCk['black-token']) {
+            if(blackJSON) {
+                if(blackJSON.indexOf(blackCk['black-token']) == -1) {
+                    blackJSON = blackJSON + '@' + JSON.stringify(blackCk)
+                    numUser = blackJSON.split('@')
+                    msgStr = `获取到第${numUser.length}个账户ck\n` + msgStr
+                    $.setdata(blackJSON,'blackJSON')
+                    $.msg(msgStr)
+                } else {
+                    $.log('检测到重复的账户ck')
+                }
+            } else {
+                msgStr = `获取到第一个账户ck\n` + msgStr
+                $.setdata(JSON.stringify(blackCk),'blackJSON')
+                $.msg(msgStr)
+            }
+        }
     }
 }
 
 async function checkEnv()
 {
-    if(!blackJSON['black-token'] || !blackJSON['token'] || !blackJSON['User-Agent'] || !blackJSON['device-value'] || !blackJSON['device-type'] || !blackJSON['phpUserId'] || !blackJSON['appId'])
-    {
-        $.log(`捉包信息不全，请检查空白字段并重新捉包: ${JSON.stringify(blackJSON)}\n`)
-        $.msg(`捉包信息不全，请检查空白字段并重新捉包: ${JSON.stringify(blackJSON)}\n`)
+    if(blackJSON) {
+        for(let users of blackJSON.split('@')) {
+            blackArr.push(JSON.parse(users))
+        }
+    } else {
+        console.log('未找到blackJSON')
         return false
     }
 
+    if(blackArr.length == 0) {
+        console.log('未找到有效的blackJSON')
+        return false
+    }
+
+    console.log(`共找到${blackArr.length}个用户`)
     return true
 }
 
@@ -191,11 +181,11 @@ async function getBussinessInfo(adId,activityType,bussinessType,version) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -233,17 +223,17 @@ async function querySignStatus() {
     //rndtime = Math.round(new Date().getTime())
     return new Promise((resolve) => {
         let url = {
-            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/weekSign/api/v1_0/calendar?appId='+blackJSON['appId'],
+            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/weekSign/api/v1_0/calendar?appId='+blackArr[userIdx]['appId'],
             headers: {
                 'Host' : 'market.chuxingyouhui.com',
                 'Origin' : 'https://m.black-unique.com',
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Connection' : 'keep-alive',
-                'black-token' : blackJSON['black-token'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Accept' : 'application/json, text/plain, */*',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
             },
         };
@@ -292,18 +282,18 @@ async function doSign() {
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
-            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/weekSign/api/v1_0/sign?appId='+blackJSON['appId'],
+            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/weekSign/api/v1_0/sign?appId='+blackArr[userIdx]['appId'],
             headers: {
                 'Host' : 'market.chuxingyouhui.com',
                 'request-body' : encodeBody,
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -350,11 +340,11 @@ async function listUserTask() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -417,11 +407,11 @@ async function doTask(taskType,userTaskId,taskTitle) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -459,17 +449,17 @@ async function queryPiggyInfo() {
     //rndtime = Math.round(new Date().getTime())
     return new Promise((resolve) => {
         let url = {
-            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/golden/api/queryUserAccountInfo?appId='+blackJSON['appId'],
+            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/golden/api/queryUserAccountInfo?appId='+blackArr[userIdx]['appId'],
             headers: {
                 'Host' : 'market.chuxingyouhui.com',
                 'Origin' : 'https://m.black-unique.com',
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Connection' : 'keep-alive',
-                'black-token' : blackJSON['black-token'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Accept' : 'application/json, text/plain, */*',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
             },
         };
@@ -486,6 +476,7 @@ async function queryPiggyInfo() {
                         if(result.code == 200) {
                             if(parseFloat(result.data.goldenAmount) < parseFloat(result.data.dayCeil)) {
                                 if(parseFloat(result.data.piggyAmount) >= 1) {
+                                    await getBussinessInfo(946088114,7,'GOLDEN_CLICK','v3')
                                     await clickPiggy()
                                 }
                             } else {
@@ -509,7 +500,7 @@ async function queryPiggyInfo() {
 async function clickPiggy() {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime())
-    reqBody = `{"appId":"${blackJSON['appId']}"}`
+    reqBody = `{"appId":"${blackArr[userIdx]['appId']}","extraReq":${bussinessInfo}}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -520,11 +511,11 @@ async function clickPiggy() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -560,7 +551,7 @@ async function clickPiggy() {
 async function getUserFlopRecord() {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime())
-    reqBody = `{"appId":"${blackJSON['appId']}","queryDay":"${todayDate}"}`
+    reqBody = `{"appId":"${blackArr[userIdx]['appId']}","queryDay":"${todayDate}"}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -571,11 +562,11 @@ async function getUserFlopRecord() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -620,7 +611,7 @@ async function getUserFlopRecord() {
 async function userFlop(serialNumber) {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime())
-    reqBody = `{"appId":"${blackJSON['appId']}","serialNumber":${serialNumber},"flopDay":"${todayDate}","extraReq":${bussinessInfo}}`
+    reqBody = `{"appId":"${blackArr[userIdx]['appId']}","serialNumber":${serialNumber},"flopDay":"${todayDate}","extraReq":${bussinessInfo}}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -631,11 +622,11 @@ async function userFlop(serialNumber) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -679,15 +670,12 @@ async function listRedPacket() {
             url: 'https://fanxian-api.chuxingyouhui.com/api/redPacketIncome/v1_0/listRedPacket',
             headers: {
                 'Host' : 'fanxian-api.chuxingyouhui.com',
-                'phpUserId' : blackJSON['phpUserId'],
-                'device-value' : blackJSON['device-value'],
-                'device-type' : blackJSON['device-type'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'newcomer' : 'true',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Content-Length' : '0',
                 'Connection' : 'keep-alive',
@@ -714,8 +702,8 @@ async function listRedPacket() {
                                     }
                                     if(redItem.status == 2 && redItem.money == 0 && redPacketCount < 7) {
                                         signRetryCount = 0
-                                        //await getSignInfo('open')
-                                        //await $.wait(500)
+                                        await getSignInfo('open')
+                                        await $.wait(500)
                                         await openRedPacket()
                                     }
                                 }
@@ -744,15 +732,12 @@ async function openRedPacket() {
             headers: {
                 'Host' : 'pyp-api.chuxingyouhui.com',
                 'Accept' : 'application/json, text/plain, */*',
-                'phpUserId' : blackJSON['phpUserId'],
-                'device-value' : blackJSON['device-value'],
                 'ymd' : '0',
-                'device-type' : blackJSON['device-type'],
                 'newcomer' : 'true',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Connection' : 'keep-alive',
@@ -773,8 +758,8 @@ async function openRedPacket() {
                         if(result.code == 200) {
                             console.log(`打开红包获得：${result.data.money}现金`)
                             signRetryCount = 0
-                            //await getSignInfo('boom')
-                            //await $.wait(2000)
+                            await getSignInfo('boom')
+                            await $.wait(2000)
                             await boomRedPacket()
                         } else {
                             console.log(`打开红包失败：${result.msg}`)
@@ -800,14 +785,11 @@ async function boomRedPacket() {
             headers: {
                 'Host' : 'fanxian-api.chuxingyouhui.com',
                 'Accept' : 'application/json, text/plain, */*',
-                'phpUserId' : blackJSON['phpUserId'],
-                'device-value' : blackJSON['device-value'],
-                'device-type' : blackJSON['device-type'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
                 'Content-Type' : 'application/json;charset=utf-8',
@@ -844,7 +826,7 @@ async function boomRedPacket() {
 async function userFruitDetail() {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime()/1000)
-    reqBody = `{"appId":"${blackJSON['appId']}","isMiniProgram":false}`
+    reqBody = `{"appId":"${blackArr[userIdx]['appId']}","isMiniProgram":false}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -855,11 +837,11 @@ async function userFruitDetail() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Connection' : 'keep-alive',
             },
             body: reqBody,
@@ -910,7 +892,7 @@ async function userFruitDetail() {
 async function fruitStageReward() {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime()/1000)
-    reqBody = `{"userFruitId":"${userFruitId}","appId":"${blackJSON['appId']}"}`
+    reqBody = `{"userFruitId":"${userFruitId}","appId":"${blackArr[userIdx]['appId']}"}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -921,11 +903,11 @@ async function fruitStageReward() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Connection' : 'keep-alive',
             },
             body: reqBody,
@@ -971,11 +953,11 @@ async function wateringFruit() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Connection' : 'keep-alive',
             },
             body: reqBody,
@@ -1028,11 +1010,11 @@ async function waterTaskList() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Connection' : 'keep-alive',
             },
             body: reqBody,
@@ -1100,11 +1082,11 @@ async function doWaterTask(taskType,taskId,taskTitle) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1152,11 +1134,11 @@ async function receiveWaterDrop(taskType,userTaskId,taskTitle) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1204,11 +1186,11 @@ async function nutrientTaskList() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Connection' : 'keep-alive',
             },
             body: reqBody,
@@ -1261,11 +1243,11 @@ async function doNutrientTask(taskType,taskId,taskTitle) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1313,11 +1295,11 @@ async function userFertilizerDetail(taskType,taskId,taskTitle) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1373,11 +1355,11 @@ async function useFertilizer(userToolId) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1422,7 +1404,7 @@ async function getTreeCoupon() {
 async function clickTree() {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime())
-    reqBody = `{"userFruitId":"${userFruitId}","appId":"${blackJSON['appId']}"}`
+    reqBody = `{"userFruitId":"${userFruitId}","appId":"${blackArr[userIdx]['appId']}"}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -1433,11 +1415,11 @@ async function clickTree() {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1477,7 +1459,7 @@ async function clickTree() {
 async function receiveReward(rewardId,rewardName,rewardInfo) {
     let caller = printCaller()
     //rndtime = Math.round(new Date().getTime())
-    reqBody = `{"rewardId":"${rewardId}","userFruitId":"${userFruitId}","appId":"${blackJSON['appId']}"}`
+    reqBody = `{"rewardId":"${rewardId}","userFruitId":"${userFruitId}","appId":"${blackArr[userIdx]['appId']}"}`
     encodeBody = encodeURIComponent(reqBody)
     return new Promise((resolve) => {
         let url = {
@@ -1488,11 +1470,11 @@ async function receiveReward(rewardId,rewardName,rewardInfo) {
                 'Accept' : 'application/json, text/plain, */*',
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding' : 'gzip, deflate, br',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Content-Type' : 'application/json;charset=utf-8',
                 'Origin' : 'https://m.black-unique.com',
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Referer' : 'https://m.black-unique.com/',
                 'Connection' : 'keep-alive',
             },
@@ -1513,7 +1495,6 @@ async function receiveReward(rewardId,rewardName,rewardInfo) {
                         } else {
                             console.log(`获取优惠券失败：${result.msg}`)
                         }
-                        await $.wait(1000)
                     }
                 }
             } catch (e) {
@@ -1527,8 +1508,8 @@ async function receiveReward(rewardId,rewardName,rewardInfo) {
 
 //查询账户信息
 async function userInfo() {
-    console.log(`\n========= 账户信息 =========`)
-    notifyStr += `========= 账户信息 =========\n`
+    console.log(`\n========= 账户${userIdx+1} 信息 =========`)
+    notifyStr += `========= 账户${userIdx+1} 信息 =========\n`
     await userRebateInfo()
     await userTopInfo()
 }
@@ -1543,13 +1524,10 @@ async function userRebateInfo() {
             headers: {
                 'Host' : 'pyp-api.chuxingyouhui.com',
                 'Accept' : '*/*',
-                'phpUserId' : blackJSON['phpUserId'],
-                'device-value' : blackJSON['device-value'],
-                'device-type' : blackJSON['device-type'],
                 'Accept-Language' : 'zh-Hans-CN;q=1',
-                'token' : blackJSON['token'],
-                'User-Agent' : blackJSON['User-Agent'],
-                'black-token' : blackJSON['black-token'],
+                'token' : blackArr[userIdx]['token'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Connection' : 'keep-alive',
             },
@@ -1565,8 +1543,10 @@ async function userRebateInfo() {
                         let result = JSON.parse(data);
                         if(logDebug) console.log(result);
                         if(result.code == 200) {
-                            console.log(`【现金余额】：${result.data.currencyBlanceResp.commission}`)
-                            notifyStr += `【现金余额】：${result.data.currencyBlanceResp.commission}\n`
+                            console.log(`【骑士卡号】：${result.data.userPointsResp.cardNo}`)
+                            notifyStr += `【骑士卡号】：${result.data.userPointsResp.cardNo}\n`
+                            console.log(`【现金余额】：${result.data.currencyBlanceResp.commission}元`)
+                            notifyStr += `【现金余额】：${result.data.currencyBlanceResp.commission}元\n`
                         } else {
                             console.log(`查询现金余额失败：${result.msg}`)
                             notifyStr += `查询现金余额失败：${result.msg}\n`
@@ -1589,17 +1569,17 @@ async function userTopInfo() {
     //rndtime = Math.round(new Date().getTime())
     return new Promise((resolve) => {
         let url = {
-            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo?appId='+blackJSON['appId'],
+            url: 'https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo?appId='+blackArr[userIdx]['appId'],
             headers: {
                 'Host' : 'market.chuxingyouhui.com',
                 'Origin' : 'https://m.black-unique.com',
                 'Accept-Encoding' : 'gzip, deflate, br',
                 'Connection' : 'keep-alive',
-                'black-token' : blackJSON['black-token'],
+                'black-token' : blackArr[userIdx]['black-token'],
                 'Accept' : 'application/json, text/plain, */*',
-                'User-Agent' : blackJSON['User-Agent'],
+                'User-Agent' : blackArr[userIdx]['User-Agent'],
                 'Referer' : 'https://m.black-unique.com/',
-                'token' : blackJSON['token'],
+                'token' : blackArr[userIdx]['token'],
                 'Accept-Language' : 'zh-CN,zh-Hans;q=0.9',
             },
         };
@@ -1614,8 +1594,8 @@ async function userTopInfo() {
                         let result = JSON.parse(data);
                         if(logDebug) console.log(result);
                         if(result.code == 200) {
-                            console.log(`【勋章余额】：${result.data.score}`)
-                            notifyStr += `【勋章余额】：${result.data.score}\n`
+                            console.log(`【勋章余额】：${result.data.score} ≈ ${result.data.score/10000}元`)
+                            notifyStr += `【勋章余额】：${result.data.score} ≈ ${result.data.score/10000}元\n`
                         } else {
                             console.log(`查询勋章余额失败：${result.msg}`)
                             notifyStr += `查询勋章余额失败：${result.msg}\n`
