@@ -20,8 +20,7 @@ https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo
 [MITM]
 hostname = market.chuxingyouhui.com
 */
-
-const $ = Env('全球购骑士特权')
+const $ = new Env('全球购骑士特权');
 const jsname = '全球购骑士特权'
 const notifyFlag = 1; //0为关闭通知，1为打开通知,默认为1
 const logDebug = 0
