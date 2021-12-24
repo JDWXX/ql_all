@@ -27,13 +27,13 @@ let zqboxbodys = ""
 
 
 if (zqboxbody) {
-    if (zqboxbody.indexOf("&") == -1) {
+    if (zqboxbody.indexOf("@") == -1) {
         zqboxbodyArr.push(zqboxbody)
-    } else if (zqboxbody.indexOf("&") > -1) {
-        zqboxbodys = zqboxbody.split("&")
-    } else if (process.env.zqboxbody && process.env.zqboxbody.indexOf('&') > -1) {
-        zqboxbodyArr = process.env.zqboxbody.split('&');
-        console.log(`您选择的是用"&"隔开\n`)
+    } else if (zqboxbody.indexOf("@") > -1) {
+        zqboxbodys = zqboxbody.split("@")
+    } else if (process.env.zqboxbody && process.env.zqboxbody.indexOf('@') > -1) {
+        zqboxbodyArr = process.env.zqboxbody.split('@');
+        console.log(`您选择的是用"@"隔开\n`)
     }
 }
 Object.keys(zqboxbodys).forEach((item) => {
