@@ -1,0 +1,62 @@
+{
+  "name": "中青重写订阅",
+  "author": "elecV2p",
+  "mitmhost": ["kandian.wkandian.com"],
+  "rewrite": [
+    {
+      "match": "https://kandian.wkandian.com/v5/article/info.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqwz.js",
+      "enable": true
+    },
+    {
+      "match": "https://kandian.wkandian.com/v5/article/detail.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqwz.js",
+      "enable": true
+    },
+    {
+      "match": "https://kandian.wkandian.com/v5/user/stay.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqwz.js",
+      "enable": true
+    }, 
+    {
+      "match": "https://kandian.wkandian.com/v5/CommonReward/toGetReward.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqqd.js",
+      "enable": true
+    },
+    {
+      "match": "https://kandian.wkandian.com/v17/NewTask/getTaskList.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zq_today_score.js",
+      "enable": true
+    }
+    ,
+    {
+      "match": "https://kandian.wkandian.com/v5/nameless/adlickstart.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqkkz.js",
+      "enable": true
+    }
+    ,
+    {
+      "match": "https://kandian.wkandian.com/v5/CommonReward/toGetReward.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqbox.js",
+      "enable": true
+    }
+     ,
+    {
+      "match": "https://kandian.wkandian.com/v5/wechat/withdraw2.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zq_withdraw.js",
+      "enable": true
+    } 
+    ,
+    {
+      "match": "https://kandian.wkandian.com/v5/task/browse_start.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqllz.js",
+      "enable": true
+    }
+    ,
+    {
+      "match": "https://kandian.wkandian.com/v5/Sousuo/playStart.json",
+      "target": "https://raw.githubusercontent.com/shaolin-kongfu/js_scripts/main/zq/zqssz.js",
+      "enable": true
+    }
+  ]
+}
