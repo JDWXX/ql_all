@@ -1,5 +1,5 @@
 /*
-APP：全球购骑士特权
+全球购骑士特权
 直接appstore搜索下载，方便的话可以微信扫下面图片二维码走邀请注册，谢谢
 http://cxgc.top/upload/2021/12/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20211224100317-f9b9952ead0145e2b295db8454cd839d.jpg
 定时为每小时一次，务必在0分到5分之间运行，目前每天大概1毛7
@@ -10,15 +10,23 @@ http://cxgc.top/upload/2021/12/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_202112241003
 再从 URL里找到 xxxx?appid=一串数字
 然后填在blackJSON里面，注意按照JSON格式填写。用青龙面板的环境变量或者外面用双引号的，字符串内需要用\"转义
 export blackJSON='{"black-token":"", "token":"", "User-Agent":"", "appId":""}'
-
 V2P，圈X：重写方法 -- 点击右下角【我的】-> 【每日签到赚现金】
+感谢原作者提供的脚本 https://ghproxy.com/https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
 [task_local]
 #全球购骑士特权
-0 * * * * https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js, tag=全球购骑士特权, enabled=true
-[rewrite_local]
-https://market.chuxingyouhui.com/promo-bargain-api/activity/mqq/api/indexTopInfo? url script-request-header https://raw.githubusercontent.com/leafxcy/JavaScript/main/blackUnique.js
-[MITM]
-hostname = market.chuxingyouhui.com
+0 * * * * https://github.com/JDWXX/ql_all/blob/master/qsk/qsk.js, tag=全球购骑士特权, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+
+================Loon==============
+[Script]
+cron "0 * * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/qsk/qsk.js,tag=全球购骑士特权
+
+===============Surge=================
+全球购骑士特权 = type=cron,cronexp="0 * * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/ql_all/blob/master/qsk/qsk.js
+
+============小火箭=========
+全球购骑士特权 = type=cron,script-path=https://github.com/JDWXX/ql_all/blob/master/qsk/qsk.js, cronexpr="0 * * * *", timeout=3600, enable=true
 */
 const $ = new Env('全球购骑士特权');
 const jsname = '全球购骑士特权'
