@@ -68,7 +68,7 @@ Object.keys(zqqdbodys).forEach((item) => {
         date = new Date()
         if ($.isNode() &&date.getHours() == 11 && date.getMinutes()<10) {
             if (message.length != 0) {
-                   await notify.sendNotify("中青看点签到", `${message}\n\n shaolin-kongfu`);
+                   await notify.sendNotify("中青看点签到", `${message}\n\n https://github.com/JDWXX/ql_all`);
             }
         } else {
             $.msg($.name, "",  message)

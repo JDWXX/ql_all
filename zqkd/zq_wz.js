@@ -23,7 +23,6 @@ const $ = new Env("中青看点阅读文章");
 const notify = $.isNode() ? require('./sendNotify') : '';
 message = ""
 
-
 let zqwzbody= $.isNode() ? (process.env.zqwzbody ? process.env.zqwzbody : "") : ($.getdata('zqwzbody') ? $.getdata('zqwzbody') : "")
 let zqwzbodyArr = []
 let zqwzbodys = ""
@@ -47,24 +46,13 @@ const wzheader = {
 }
 
 if (zq_timebody) {
-    if (zq_timebody.indexOf("&") == -1) {
+    if (zq_timebody.indexOf("@") == -1) {
         zq_timebodyArr.push(zq_timebody)
-    } else if (zq_timebody.indexOf("&") > -1) {
-        zq_timebodys = zq_timebody.split("&")
-    } else if (process.env.zq_timebody && process.env.zq_timebody.indexOf('&') > -1) {
-        zq_timebodyArr = process.env.zq_timebody.split('&');
-        console.log(`您选择的是用"&"隔开\n`)
-    }
-} else if($.isNode()) {
-    var fs = require("fs");
-    zq_timebody = fs.readFileSync("zq_timebody.txt", "utf8");
-    if (zq_timebody !== `undefined`) {
-        zq_timebodys = zq_timebody.split("\n");
-    } else {
-        $.msg($.name, '【提示】请点击文章阅读1分钟获取timebody，再跑一次脚本', '不知道说啥好', {
-            "open-url": "给您劈个叉吧"
-        });
-        $.done()
+    } else if (zq_timebody.indexOf("@") > -1) {
+        zq_timebodys = zq_timebody.split("@")
+    } else if (process.env.zq_timebody && process.env.zq_timebody.indexOf('@') > -1) {
+        zq_timebodyArr = process.env.zq_timebody.split('@');
+        console.log(`您选择的是用"@"隔开\n`)
     }
 }
 Object.keys(zq_timebodys).forEach((item) => {
@@ -102,16 +90,17 @@ Object.keys(zqwzbodys).forEach((item) => {
 
 !(async () => {
     if (typeof $request !== "undefined") {
-     getzqwzbody()
-     getzq_timebody()
-     $.done()
- }else {
+        getzqwzbody()
+        getzq_timebody()
+        $.done()
+    }else {
 
         console.log(`共${zqwzbodyArr.length}个阅读body`)
         index1 = indexLast * 1
         for (let k =  index1 ? index1 : 0; k < zqwzbodyArr.length; k++) {
             // $.message = ""
             zqwzbody1 = zqwzbodyArr[k];
+            // console.log(`${zqwzbody1}`)
             console.log(`--------第 ${k + 1} 次阅读任务执行中--------\n`)
             await wzjl()
             zqwznum = k+2
@@ -121,33 +110,33 @@ Object.keys(zqwzbodys).forEach((item) => {
                 zq_timebody1 = zq_timebodyArr[k];
                 await timejl()
             }
-            console.log("\n\n")
+            console.log("\n阅读完成\n")
         }
         $.setdata(0, 'zqbody_index');
     }
 
 
 
-        // date = new Date()
-        // if ($.isNode() &&date.getHours() == 11 && date.getMinutes()<10) {
-        //     if (message.length != 0) {
-        //            await notify.sendNotify("晶彩看点文章阅读", `${message}\n\n shaolin-kongfu`);
-        //     }
-        // } else {
-        //     $.msg($.name, "",  message)
-        // }
+    // date = new Date()
+    // if ($.isNode() &&date.getHours() == 11 && date.getMinutes()<10) {
+    //     if (message.length != 0) {
+    //            await notify.sendNotify("晶彩看点文章阅读", `${message}\n\n shaolin-kongfu`);
+    //     }
+    // } else {
+    //     $.msg($.name, "",  message)
+    // }
 
-    })()
+})()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
 
 
 function getzqwzbody() {
     if ($request.url.match(/\/kandian.wkandian.com\/v5\/article\/info.json/)||$request.url.match(/\/kandian.wkandian.com\/v5\/article\/detail.json/)) {
-          bodyVal1 = $request.url.split('p=')[1]
-          console.log(encodeURIComponent(bodyVal1))
-          bodyVal = 'p='+encodeURIComponent(bodyVal1)
-            console.log(bodyVal)
+        bodyVal1 = $request.url.split('p=')[1]
+        console.log(encodeURIComponent(bodyVal1))
+        bodyVal = 'p='+encodeURIComponent(bodyVal1)
+        console.log(bodyVal)
 
         if (zqwzbody) {
             if (zqwzbody.indexOf(bodyVal) > -1) {
@@ -157,7 +146,7 @@ function getzqwzbody() {
                 $.setdata(zqwzbodys, 'zqwzbody');
                 $.log(`${$.name}获取阅读: 成功, zqwzbodys: ${bodyVal}`);
                 bodys = zqwzbodys.split("&")
-                 $.msg($.name, "获取第" + bodys.length + "个阅读请求: 成功🎉", ``)
+                $.msg($.name, "获取第" + bodys.length + "个阅读请求: 成功🎉", ``)
             }
         } else {
             $.setdata(bodyVal, 'zqwzbody');
@@ -166,22 +155,21 @@ function getzqwzbody() {
         }
     }
 
-  }
+}
 //阅读文章奖励
 function wzjl(timeout = 0) {
     return new Promise((resolve) => {
         let url = {
             url : 'https://kandian.wkandian.com/v5/article/complete.json',
             headers : wzheader,
-            body : zqwzbody1
-        }//xsgbody,}
+            body : zqwzbody1,}//xsgbody,}
         $.post(url, async (err, resp, data) => {
             try {
-                console.log(data)
+
                 const result = JSON.parse(data)
                 if(result.items.read_score !== "undefined" ){
                     console.log('\n浏览文章成功，获得：'+result.items.read_score + '金币')
-                    
+
                 }else{
                     console.log('\n看太久了，换一篇试试')
                 }
@@ -189,15 +177,15 @@ function wzjl(timeout = 0) {
             } finally {
                 resolve()
             }
-            },timeout)
+        },timeout)
     })
 }
 
 
 function getzq_timebody() {
     if ($request.url.match(/\/kandian.wkandian.com\/v5\/user\/stay.json/)) {
-          bodyVal=$request.body
-            console.log(bodyVal)
+        bodyVal=$request.body
+        console.log(bodyVal)
         if (zq_timebody) {
             if (zq_timebody.indexOf(bodyVal) > -1) {
                 $.log("此阅读请求已存在，本次跳过")
@@ -235,7 +223,7 @@ function timejl(timeout = 0) {
             } finally {
                 resolve()
             }
-            },timeout)
+        },timeout)
     })
 }
 

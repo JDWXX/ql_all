@@ -64,22 +64,22 @@ Object.keys(zqllzbodys).forEach((item) => {
 })
 
 !(async () => {
-     if (typeof $request !== "undefined") {
-     await getzqllzbody()
-     $.done()
- }else{
-    console.log(`共${zqllzbodyArr.length}个浏览赚body`)
-	        for (let k = 0; k < zqllzbodyArr.length; k++) {
+    if (typeof $request !== "undefined") {
+        await getzqllzbody()
+        $.done()
+    }else{
+        console.log(`共${zqllzbodyArr.length}个浏览赚body`)
+        for (let k = 0; k < zqllzbodyArr.length; k++) {
 
-                zqllzbody1 = zqllzbodyArr[k];
-                console.log(`--------第 ${k + 1} 次浏览赚激活执行中--------\n`)
-                    await Start()
-                await $.wait(1000);
-                console.log("\n\n")
-            }
+            zqllzbody1 = zqllzbodyArr[k];
+            console.log(`--------第 ${k + 1} 次浏览赚激活执行中--------\n`)
+            await Start()
+            await $.wait(1000);
+            console.log("\n\n")
+        }
 
-     }
-    })()
+    }
+})()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
 
@@ -88,9 +88,9 @@ Object.keys(zqllzbodys).forEach((item) => {
 
 //获取浏览赚激活body
 async function getzqllzbody() {
-if ($request.url.match(/\/kandian.wkandian.com\/v5\/task\/browse_start/)) {
-          bodyVal=$request.body
-          await $.wait(1100);
+    if ($request.url.match(/\/kandian.wkandian.com\/v5\/task\/browse_start/)) {
+        bodyVal=$request.body
+        await $.wait(1100);
         if (zqllzbody) {
             if (zqllzbody.indexOf(bodyVal) > -1) {
                 $.log("此浏览赚任务请求已存在，本次跳过")
@@ -99,7 +99,7 @@ if ($request.url.match(/\/kandian.wkandian.com\/v5\/task\/browse_start/)) {
                 $.setdata(zqllzbodys, 'zqllzbody');
                 $.log(`${$.name}获取浏览赚任务: 成功, zqllzbodys: ${bodyVal}`);
                 bodys = zqllzbodys.split("&")
-                 $.msg($.name, "获取第" + bodys.length + "个浏览赚任务请求: 成功🎉", ``)
+                $.msg($.name, "获取第" + bodys.length + "个浏览赚任务请求: 成功🎉", ``)
             }
         } else {
             $.setdata(bodyVal, 'zqllzbody');
@@ -108,7 +108,7 @@ if ($request.url.match(/\/kandian.wkandian.com\/v5\/task\/browse_start/)) {
         }
     }
 
-  }
+}
 //浏览赚激活
 function Start(timeout = 0) {
     return new Promise((resolve) => {
@@ -130,7 +130,7 @@ function Start(timeout = 0) {
                         await $.wait(10000);
                         await end()
                     }
-                    }
+                }
 
                 else{
                     console.log('\n激活浏览赚任务失败')
@@ -142,7 +142,7 @@ function Start(timeout = 0) {
             } finally {
                 resolve()
             }
-            },timeout)
+        },timeout)
     })
 }
 //浏览赚奖励
@@ -165,7 +165,7 @@ function end(timeout = 0) {
             } finally {
                 resolve()
             }
-            },timeout)
+        },timeout)
     })
 }
 

@@ -104,10 +104,10 @@ Object.keys(zq_cookies).forEach((item) => {
 
 
          if (message.length != 0) {
-             await notify ? notify.sendNotify("中青看点提现", `${message}\n\n shaolin-kongfu`) :
-                 $.msg($.name, "中青看点提现", `${message}\n\n shaolin-kongfu`);
+             await notify ? notify.sendNotify("中青看点提现", `${message}\n\n https://github.com/JDWXX/ql_all`) :
+                 $.msg($.name, "中青看点提现", `${message}\n\n https://github.com/JDWXX/ql_all`);
          } else if ($.isNode()) {
-             await notify.sendNotify("中青看点提现", `${message}\n\nshaolin-kongfu`);
+             await notify.sendNotify("中青看点提现", `${message}\n\nhttps://github.com/JDWXX/ql_all`);
          }
      }
      })()
