@@ -26,7 +26,7 @@ cron "15 7 * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/qsk/zq
 const $ = new Env("中青看点好友签到红包");
 const notify = $.isNode() ? require('./sendNotify') : '';
 message = ""
-let zq_cookie= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zq_cookie= $.isNode() ? (process.env.zq_cookie ? process.env.zq_cookie : "") : ($.getdata('zq_cookie') ? $.getdata('zq_cookie') : "")
 let zq_cookieArr = []
 let zq_cookies = ""
 if (zq_cookie) {

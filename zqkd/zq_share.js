@@ -23,16 +23,13 @@ cron "15 6,12,18 * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/
 const $ = new Env("中青看点火爆转发");
 const notify = $.isNode() ? require('./sendNotify') : '';
 message = ""
-let zq_cookie= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zq_cookie= $.isNode() ? (process.env.zq_cookie ? process.env.zq_cookie : "") : ($.getdata('zq_cookie') ? $.getdata('zq_cookie') : "")
 let zq_cookieArr = []
 let zq_cookies = ""
 
 var myDate = new Date();
 var hour=myDate.getHours();
 console.log(hour)
-
-
-
 
 if (zq_cookie) {
     if (zq_cookie.indexOf("@") == -1 && zq_cookie.indexOf("@") == -1) {

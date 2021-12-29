@@ -27,13 +27,24 @@ let zqboxbodys = ""
 
 
 if (zqboxbody) {
-    if (zqboxbody.indexOf("@") == -1) {
+    if (zqboxbody.indexOf("&") == -1) {
         zqboxbodyArr.push(zqboxbody)
-    } else if (zqboxbody.indexOf("@") > -1) {
-        zqboxbodys = zqboxbody.split("@")
-    } else if (process.env.zqboxbody && process.env.zqboxbody.indexOf('@') > -1) {
-        zqboxbodyArr = process.env.zqboxbody.split('@');
-        console.log(`您选择的是用"@"隔开\n`)
+    } else if (zqboxbody.indexOf("&") > -1) {
+        zqboxbodys = zqboxbody.split("&")
+    } else if (process.env.zqboxbody && process.env.zqboxbody.indexOf('&') > -1) {
+        zqboxbodyArr = process.env.zqboxbody.split('&');
+        console.log(`您选择的是用"&"隔开\n`)
+    }
+} else if($.isNode()){
+    var fs = require("fs");
+    zqboxbody = fs.readFileSync("zqboxbody.txt", "utf8");
+    if (zqboxbody !== `undefined`) {
+        zqboxbodys = zqboxbody.split("\n");
+    } else {
+        $.msg($.name, '【提示】请在app下方点击任务图标，在每日任务中点击所有可领取的奖励，获取body，明天再跑一次脚本', '不知道说啥好', {
+            "open-url": "给您劈个叉吧"
+        });
+        $.done()
     }
 }
 Object.keys(zqboxbodys).forEach((item) => {

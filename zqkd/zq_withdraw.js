@@ -22,11 +22,11 @@ cron "15 10 * * *" script-path=https://github.com/JDWXX/ql_all/blob/master/qsk/z
 const $ = new Env("中青看点提现");
 const notify = $.isNode() ? require('./sendNotify') : '';
 message = ""
-let zq_withdraw= $.isNode() ? (process.env.zqWithdraw ? process.env.zqWithdraw : "") : ($.getdata('zqWithdraw') ? $.getdata('zqWithdraw') : "")
+let zq_withdraw= $.isNode() ? (process.env.zq_withdraw ? process.env.zq_withdraw : "") : ($.getdata('zq_withdraw') ? $.getdata('zq_withdraw') : "")
 let zq_withdrawArr = []
 let zq_withdraws = ""
-let zq_cash = $.isNode() ? (process.env.zqCash ? process.env.zqCash : "30") : ($.getdata('zqCash') ? $.getdata('zqCash') : "30")
-let zq_cookie= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zq_cash = $.isNode() ? (process.env.zq_cash ? process.env.zq_cash : "30") : ($.getdata('zq_cash') ? $.getdata('zq_cash') : "30")
+let zq_cookie= $.isNode() ? (process.env.zq_cookie ? process.env.zq_cookie : "") : ($.getdata('zq_cookie') ? $.getdata('zq_cookie') : "")
 let zq_cookieArr = []
 let zq_cookies = ""
 let nowmoney;
@@ -42,6 +42,18 @@ if (zq_withdraw) {
     } else if (process.env.zq_withdraw && process.env.zq_withdraw.indexOf('@') > -1) {
         zq_withdrawArr = process.env.zq_withdraw.split('@');
         console.log(`您选择的是用"@"隔开\n`)
+    }
+} else if($.isNode()){
+    var fs = require("fs");
+    zq_withdraw = fs.readFileSync("zq_withdraw.txt", "utf8");
+    if (zq_withdraw !== `undefined`) {
+        zq_withdraws = zq_withdraw.split("\n");
+    } else {
+        $.msg($.name, '【提示】请先完成一次提现，明天再跑一次脚本', '不知道说啥好', {
+            "open-url": "给您劈个叉吧"
+        });
+
+        $.done()
     }
 };
 Object.keys(zq_withdraws).forEach((item) => {

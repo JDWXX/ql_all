@@ -27,7 +27,7 @@ let zqwzbody= $.isNode() ? (process.env.zqwzbody ? process.env.zqwzbody : "") : 
 let zqwzbodyArr = []
 let zqwzbodys = ""
 
-let zq_timebody= $.isNode() ? (process.env.zqTimebody ? process.env.zqTimebody : "") : ($.getdata('zqTimebody') ? $.getdata('zqTimebody') : "")
+let zq_timebody= $.isNode() ? (process.env.zq_timebody ? process.env.zq_timebody : "") : ($.getdata('zq_timebody') ? $.getdata('zq_timebody') : "")
 let zq_timebodyArr = []
 let zq_timebodys = ""
 let zqwznum
@@ -46,13 +46,24 @@ const wzheader = {
 }
 
 if (zq_timebody) {
-    if (zq_timebody.indexOf("@") == -1) {
+    if (zq_timebody.indexOf("&") == -1) {
         zq_timebodyArr.push(zq_timebody)
-    } else if (zq_timebody.indexOf("@") > -1) {
-        zq_timebodys = zq_timebody.split("@")
-    } else if (process.env.zq_timebody && process.env.zq_timebody.indexOf('@') > -1) {
-        zq_timebodyArr = process.env.zq_timebody.split('@');
-        console.log(`您选择的是用"@"隔开\n`)
+    } else if (zq_timebody.indexOf("&") > -1) {
+        zq_timebodys = zq_timebody.split("&")
+    } else if (process.env.zq_timebody && process.env.zq_timebody.indexOf('&') > -1) {
+        zq_timebodyArr = process.env.zq_timebody.split('&');
+        console.log(`您选择的是用"&"隔开\n`)
+    }
+} else if($.isNode()) {
+    var fs = require("fs");
+    zq_timebody = fs.readFileSync("zq_timebody.txt", "utf8");
+    if (zq_timebody !== `undefined`) {
+        zq_timebodys = zq_timebody.split("\n");
+    } else {
+        $.msg($.name, '【提示】请点击文章阅读1分钟获取timebody，再跑一次脚本', '不知道说啥好', {
+            "open-url": "给您劈个叉吧"
+        });
+        $.done()
     }
 }
 Object.keys(zq_timebodys).forEach((item) => {
@@ -62,24 +73,13 @@ Object.keys(zq_timebodys).forEach((item) => {
 })
 
 if (zqwzbody) {
-    if (zqwzbody.indexOf("&") == -1) {
+    if (zqwzbody.indexOf("@") == -1) {
         zqwzbodyArr.push(zqwzbody)
-    } else if (zqwzbody.indexOf("&") > -1) {
-        zqwzbodys = zqwzbody.split("&")
-    } else if (process.env.zqwzbody && process.env.zqwzbody.indexOf('&') > -1) {
-        zqwzbodyArr = process.env.zqwzbody.split('&');
+    } else if (zqwzbody.indexOf("@") > -1) {
+        zqwzbodys = zqwzbody.split("@")
+    } else if (process.env.zqwzbody && process.env.zqwzbody.indexOf('@') > -1) {
+        zqwzbodyArr = process.env.zqwzbody.split('@');
         console.log(`您选择的是用"&"隔开\n`)
-    }
-} else if($.isNode()) {
-    var fs = require("fs");
-    zqwzbody = fs.readFileSync("zqwzbody.txt", "utf8");
-    if (zqwzbody !== `undefined`) {
-        zqwzbodys = zqwzbody.split("\n");
-    } else {
-        $.msg($.name, '【提示】请点击文章获取body，再跑一次脚本', '不知道说啥好', {
-            "open-url": "给您劈个叉吧"
-        });
-        $.done()
     }
 }
 Object.keys(zqwzbodys).forEach((item) => {

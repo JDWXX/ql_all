@@ -27,7 +27,7 @@ let zqlookStartbody= $.isNode() ? (process.env.zqlookStartbody ? process.env.zql
 let zqlookStartbodyArr = []
 let zqlookStartbodys = ""
 
-let zq_cookie= $.isNode() ? (process.env.zqkdCookie ? process.env.zqkdCookie : "") : ($.getdata('zqkdCookie') ? $.getdata('zqkdCookie') : "")
+let zq_cookie= $.isNode() ? (process.env.zq_cookie ? process.env.zq_cookie : "") : ($.getdata('zq_cookie') ? $.getdata('zq_cookie') : "")
 let zq_cookieArr = []
 let zq_cookies = ""
 

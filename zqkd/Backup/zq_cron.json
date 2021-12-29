@@ -1,9 +1,9 @@
 {
   "name": "中青看点定时任务订阅",
   "desc": "无",
-  "date": "2021-08-05 20:32:08",
-  "author": "https://t.me/ShaolinTemple1",
-  "resource": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_cron.json",
+  "date": "2021-12-29 01:32:08",
+  "author": "https://cxgc.top",
+  "resource": "https://github.com/JDWXX/ql_all/zqkd/Backup/zq_cron.json",
   "list": [
     {
       "name": "中青签到",
@@ -11,7 +11,7 @@
       "time": "15 2 * * *",
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqqd.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqqd.js"
       }
     },
     {
@@ -21,7 +21,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqwz.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqwz.js"
       }
     },
     {
@@ -31,7 +31,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqkkz.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqkkz.js"
       }
     },
     {
@@ -41,7 +41,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_share.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_share.js"
       }
     },
     {
@@ -51,7 +51,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_Adv_video.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_Adv_video.js"
       }
     },
     {
@@ -61,7 +61,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqbox.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqbox.js"
       }
     },
     {
@@ -71,7 +71,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_today_score.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_today_score.js"
       }
     },
     {
@@ -81,7 +81,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_friendSign.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_friendSign.js"
       }
     },
     {
@@ -91,7 +91,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_Rotary.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_Rotary.js"
       }
     },
     {
@@ -101,7 +101,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_wakeup.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_wakeup.js"
       }
     },
     {
@@ -111,7 +111,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqssz.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqssz.js"
       }
     },
     {
@@ -121,7 +121,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zqllz.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zqllz.js"
       }
     },
     {
@@ -131,7 +131,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_double.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_double.js"
       }
     },
     {
@@ -141,7 +141,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://raw.githubusercontent.com/https://github.com/JDWXX/ql_all/js_scripts/main/zq/zq_withdraw.js"
+        "target": "https://github.com/JDWXX/ql_all/zqkd/zq_withdraw.js"
       }
     }
 
