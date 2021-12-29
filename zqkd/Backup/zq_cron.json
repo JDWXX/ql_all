@@ -3,7 +3,7 @@
   "desc": "无",
   "date": "2021-12-29 01:32:08",
   "author": "https://cxgc.top",
-  "resource": "https://github.com/JDWXX/ql_all/tree/master/zqkd/Backup/zq_cron.json",
+  "resource": "https://jdwxx.github.io/jd_job/zqkd/Backup/zq_cron.json",
   "list": [
     {
       "name": "中青签到",
@@ -11,7 +11,7 @@
       "time": "15 2 * * *",
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_qd.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_qd.js"
       }
     },
     {
@@ -21,7 +21,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_wz.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_wz.js"
       }
     },
     {
@@ -31,7 +31,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_kkz.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_kkz.js"
       }
     },
     {
@@ -41,7 +41,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_share.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_share.js"
       }
     },
     {
@@ -51,7 +51,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_Adv_video.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_Adv_video.js"
       }
     },
     {
@@ -61,7 +61,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_box.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_box.js"
       }
     },
     {
@@ -71,7 +71,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_today_score.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_today_score.js"
       }
     },
     {
@@ -81,7 +81,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_friendSign.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_friendSign.js"
       }
     },
     {
@@ -91,7 +91,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_Rotary.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_Rotary.js"
       }
     },
     {
@@ -101,7 +101,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_wakeup.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_wakeup.js"
       }
     },
     {
@@ -111,7 +111,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_ssz.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_ssz.js"
       }
     },
     {
@@ -121,7 +121,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_llz.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_llz.js"
       }
     },
     {
@@ -131,7 +131,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_double.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_double.js"
       }
     },
     {
@@ -141,7 +141,7 @@
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "http://ghproxy.com/https://github.com/JDWXX/ql_all/tree/master/zqkd/zq_withdraw.js"
+        "target": "https://jdwxx.github.io/jd_job/zqkd/zq_withdraw.js"
       }
     }
 
