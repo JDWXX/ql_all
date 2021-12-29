@@ -122,7 +122,6 @@ function jcqd(timeout = 0) {
             body : zqqdbody1,}
         $.post(url, async (err, resp, data) => {
             try {
-
                 const result = JSON.parse(data)
                 if(result.success == true){
                     console.log('\n签到成功，获得：'+result.items.score +'金币')
