@@ -71,17 +71,8 @@ Object.keys(zq_timebodys).forEach((item) => {
         zq_timebodyArr.push(zq_timebodys[item])
     }
 })
-
-if (zqwzbody) {
-    if (zqwzbody.indexOf("&") == -1) {
-        zqwzbodyArr.push(zqwzbody)
-    } else if (zqwzbody.indexOf("&") > -1) {
-        zqwzbodys = zqwzbody.split("&")
-    } else if (process.env.zqwzbody && process.env.zqwzbody.indexOf('&') > -1) {
-        zqwzbodyArr = process.env.zqwzbody.split('&');
-        console.log(`您选择的是用"&"隔开\n`)
-    }
-} else if($.isNode()) {
+if($.isNode()) {
+    console.log(`读取文件\n`)
     var fs = require("fs");
     zqwzbody = fs.readFileSync("zqwzbody.txt", "utf8");
     if (zqwzbody !== `undefined`) {
@@ -93,7 +84,16 @@ if (zqwzbody) {
         $.done()
     }
 }
-
+if(zqwzbody == "") {
+    console.log(`读取青龙面板环境变量\n`)
+    if (zqwzbody.indexOf("&") == -1) {
+        zqwzbodyArr.push(zqwzbody)
+    } else if (zqwzbody.indexOf("&") > -1) {
+        zqwzbodys = zqwzbody.split("&")
+    } else if (process.env.zqwzbody && process.env.zqwzbody.indexOf('&') > -1) {
+        zqwzbodyArr = process.env.zqwzbody.split('&');
+    }
+}
 Object.keys(zqwzbodys).forEach((item) => {
     if (zqwzbodys[item] && !zqwzbodys[item].startsWith("#")) {
         zqwzbodyArr.push(zqwzbodys[item])
