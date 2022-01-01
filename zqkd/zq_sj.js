@@ -48,7 +48,7 @@ function _0x464e(_0x736b1e,_0x30f8ba){
             }
         }
     }(_0x57e6,0x4393a));
-    const md5=$[_0x54c9d9(0x135,'9%Gb')]()?require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : require('./md5') : '';
+    const md5=$[_0x54c9d9(0x135,'9%Gb')]() ? (require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : require('./md5')) : '';
     var CryptoJS=require('crypto-js');
     message='';
     var key=CryptoJS[_0x11085c(0x193)][_0x54c9d9(0x15d,'LO2T')]['parse'](_0x11085c(0x160)),ff={'iv':CryptoJS[_0x11085c(0x193)][_0x11085c(0x170)][_0x11085c(0x185)](_0x54c9d9(0x187,'^9P8')),'mode':CryptoJS[_0x54c9d9(0x17d,'yjE*')][_0x11085c(0x153)],'padding':CryptoJS[_0x11085c(0x133)][_0x11085c(0x177)]};
