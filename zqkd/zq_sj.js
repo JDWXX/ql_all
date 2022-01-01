@@ -51,9 +51,9 @@ function _0x464e(_0x736b1e,_0x30f8ba){
     const md5='';
     if($[_0x54c9d9(0x135,'9%Gb')]()){
         try {
-            md5 = require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : '';
+            const md5 = require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : '';
         } catch (e) {
-            md5 = require('./md5') ? require('./md5') : '';
+            const md5 = require('./md5') ? require('./md5') : '';
         }
     }
     var CryptoJS=require('crypto-js');
