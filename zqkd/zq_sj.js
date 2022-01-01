@@ -48,13 +48,10 @@ function _0x464e(_0x736b1e,_0x30f8ba){
             }
         }
     }(_0x57e6,0x4393a));
-    const md5='';
-    if($[_0x54c9d9(0x135,'9%Gb')]()){
-        try {
-            const md5 = require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : '';
-        } catch (e) {
-            const md5 = require('./md5') ? require('./md5') : '';
-        }
+    try {
+        const md5 = require('./JDWXX_ql_all_md5') ? require('./JDWXX_ql_all_md5') : '';
+    } catch (e) {
+        const md5 = require('./md5') ? require('./md5') : '';
     }
     var CryptoJS=require('crypto-js');
     message='';
