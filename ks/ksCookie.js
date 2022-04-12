@@ -10,6 +10,8 @@ let CookieJDs = [
 if (process.env.ksjsbCookie) {
   if (process.env.ksjsbCookie.indexOf('@') > -1) {
     CookieJDs = process.env.ksjsbCookie.split('@');
+  } else if (process.env.ksjsbCookie.indexOf('&') > -1) {
+    CookieJDs = process.env.ksjsbCookie.split('&');
   } else if (process.env.ksjsbCookie.indexOf('\n') > -1) {
     CookieJDs = process.env.ksjsbCookie.split('\n');
   } else {
