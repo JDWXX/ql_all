@@ -1,5 +1,10 @@
 /*
 IOS/安卓： 快手 普通版
+抓包教程地址：http://cxgc.top/archives/ksjsb
+欢迎填我邀请码：791642607
+交流群：212796668、681030097
+抓到极速版的CK的可以用脚本转换下【快手CK转换-ksjsbCookie转换ksCookie】 https://github.com/JDWXX/jd_job/blob/master/ks/kspt_generate.js
+
 邀请下载链接：https://kicdjpmlo.sx3i65zvgw3g8k.com/fission/offkwai/landpagex?code=2235402609&platform=qrcode&fid=2764597391&subBiz=INVITE_CODE&kpn=KUAISHOU&shareToken=Y3rDbpqo1
 邀请二维码(直接扫描打不开的话，下载后用快手APP扫一扫)：https://raw.githubusercontent.com/leafxcy/JavaScript/main/ks.png
 
