@@ -7,14 +7,14 @@
 =================================Quantumultx=========================
 [task_local]
 #快手极速版-周周十五万金币
-0 55 8-22 * * * https://github.com/JDWXX/jd_job/blob/master/ms/jd_jdjsb_10_4.js, tag=快手极速版-周周十五万金币, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 55 8-22 * * * https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_zzsww.js, tag=快手极速版-周周十五万金币, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 =================================Loon===================================
 [Script]
-cron "0 55 8-22 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/ms/jd_jdjsb_10_4.js,tag=快手极速版-周周十五万金币
+cron "0 55 8-22 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_zzsww.js,tag=快手极速版-周周十五万金币
 ===================================Surge================================
-快手极速版-周周十五万金币 = type=cron,cronexp="0 55 8-22 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/ms/jd_jdjsb_10_4.js
+快手极速版-周周十五万金币 = type=cron,cronexp="0 55 8-22 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_zzsww.js
 ====================================小火箭=============================
-快手极速版-周周十五万金币 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/ms/jd_jdjsb_10_4.js, cronexpr="0 55 8-22 * * *", timeout=3600, enable=true
+快手极速版-周周十五万金币 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_zzsww.js, cronexpr="0 55 8-22 * * *", timeout=3600, enable=true
  */
 const $ = new Env('快手极速版-周周十五万金币');
 const notify = $.isNode() ? require('./sendNotify') : '';
