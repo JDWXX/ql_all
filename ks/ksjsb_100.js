@@ -8,14 +8,14 @@
 =================================Quantumultx=========================
 [task_local]
 #快手极速版-提现100元
-0 55 8-22 * * * https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js, tag=快手极速版-提现100元, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 10 * * * * https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js, tag=快手极速版-提现100元, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 =================================Loon===================================
 [Script]
-cron "0 55 8-22 * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js,tag=快手极速版-提现100元
+cron "0 10 * * * *" script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js,tag=快手极速版-提现100元
 ===================================Surge================================
-快手极速版-提现100元 = type=cron,cronexp="0 55 8-22 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js
+快手极速版-提现100元 = type=cron,cronexp="0 10 * * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js
 ====================================小火箭=============================
-快手极速版-提现100元 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js, cronexpr="0 55 8-22 * * *", timeout=3600, enable=true
+快手极速版-提现100元 = type=cron,script-path=https://github.com/JDWXX/jd_job/blob/master/ks/ksjsb_100.js, cronexpr="0 10 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('快手极速版-提现100元');
 const notify = $.isNode() ? require('./sendNotify') : '';
