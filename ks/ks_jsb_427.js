@@ -5,7 +5,7 @@
 可以试试开启IP代理，但是效果好像不怎样，IP代理开启方式：http://cxgc.top/archives/xiequdaili
 脚本失效的话，自己抓取 body 参数，小黄鸟抓：https://api.e.kuaishou.com/rest/e/v1/reward/ad?kpf=ANDROID_PHONE&kpn=NEBULA
 欢迎填我邀请码：791642607
-交流群：212796668、681030097
+交流群：212796668、681030097、743744614
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
