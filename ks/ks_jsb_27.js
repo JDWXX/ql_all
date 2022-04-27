@@ -1,25 +1,30 @@
 /*
-快手极速版-本地
+快手极速版
 抓包教程地址：http://cxgc.top/archives/ksjsb
+建议本地跑
+可以试试开启IP代理，但是效果好像不怎样，IP代理开启方式：http://cxgc.top/archives/xiequdaili
+脚本失效的话，自己抓取 body 参数，小黄鸟抓：https://api.e.kuaishou.com/rest/e/v1/reward/ad?kpf=ANDROID_PHONE&kpn=NEBULA
 欢迎填我邀请码：791642607
 交流群：212796668、681030097
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
-#快手极速版-本地
-20 1,8,12,17 * * * https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_27.js, tag=快手极速版-本地, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+#快手极速版-4.27版
+20 1,8,12,17 * * * https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_dl.js, tag=快手极速版-4.27版, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 =================================Loon===================================
 [Script]
-cron "20 1,8,12,17 * * * script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_27.js,tag=快手极速版-本地
+cron "20 1,8,12,17 * * * script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_dl.js,tag=快手极速版-4.27版
 ===================================Surge================================
-快手极速版-本地 = type=cron,cronexp="20 1,8,12,17 * * *,wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_27.js
+快手极速版-4.27版 = type=cron,cronexp="20 1,8,12,17 * * *,wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_dl.js
 ====================================小火箭=============================
-快手极速版-本地 = type=cron,script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_27.js, cronexpr="20 1,8,12,17 * * *, timeout=3600, enable=true
+快手极速版-4.27版 = type=cron,script-path=https://github.com/JDWXX/jd_all/blob/master/ks/ks_jsb_dl.js, cronexpr="20 1,8,12,17 * * *, timeout=3600, enable=true
  */
-const $ = new Env('快手极速版-本地');
+const $ = new Env('快手极速版');
 let res,
     ksjsbCookie = $.isNode() ? (process.env.ksjsbCookie ? process.env.ksjsbCookie : "") : ($.getdata('ksjsbCookie') ? $.getdata('ksjsbCookie') : "")//快手ck
-Users = [],
+    //动态抓取参数，小黄鸟抓：https://api.e.kuaishou.com/rest/e/v1/reward/ad?kpf=ANDROID_PHONE&kpn=NEBULA
+    ksjsbSing = $.isNode() ? (process.env.ksjsbSing ? process.env.ksjsbSing : "encData=WlTuzeTU6mGT9525bjJUVnltcwcHRXhjgjAw%2BtDz1mYprUpnRHdJY0pKd7s5mx8%2BXMRRi7MCE3BSy1NNxI6bywhQueJl4YV8QDNsCONuMI7m59XX7rycrXz5ZPbObMBFLp23dqIF86Do53AbF3u4Dd2Vsk%2B1BzkhUIjucpA2gZ6g837f5Wz19RFfZ9m0pIuu8qg0EFbwOhwpb%2BCcyudsv%2FK1iPs0DeXhV63CQuUJV6MSpBlFU6%2BDiDNMUA7GDI4zywpCUdHJ%2F0LYncqCerINz2dkCnGxMVBpakSKxtczPEIzOAVLHTVmd0unS8d8STiuv8IZukHRYy%2FliimHrNUvOcSBTwZBQ1XRgAChskAICq5PFgvHEOqx1mPBevbo3XbirR9TYW%2FkxfBejWLcTQYNsaxiYFVxptFWbujhLqUR9CgOTd64YlZEn5NiOceEtLg5YkNfOreCRVE3zq%2B9nv1T9TOpqEyOHaBK%2BbN5t2F5b93bsQKr890UMfJwEyZwrhMKnf2aTknxB6MQZpQkwzEjJJcEkFq25JQSYNq2x1Qld2cEU%2FvY4USZcLaPlYBTMt8oABtpkjzlY4Yb6caUhvnCWxIkiwpTrocl4oBhKYoA%2Bygr9FKPlJL3lb1keu%2FGth%2Bu3Dj1z3Z4ZmVhoHsjfeWpZbN28Pj6RdyuSirZ6HGan5EDU%2FeZlC7VlXDRQPw4QgjkvnCGJBxbLeqWBjiPLkIta3VBviyU2%2FWje92vv3gq%2FbzKfAl14yO1yG1VBe6prNWpORWXteu%2FBJhCkQckUun7tmLW4C30eRxZDI85wjJHUkry3xNk981RAgdiikTlMF0GkrvjQkAfsTVVyTgLDTvrnbTyzkOfGcB1joxDXq4qxN1vV11o2TWuFg%3D%3D&sign=5a54eecde4d4ea61157e297d241d89411e4852216c84b1edaf85530f4233687d&__NS_sig3=b5a4d4f787c203c8b4fdfeffd95c01070f5f8e85e1ece2f4&__NStokensig=34cfd81b4d1058f9624a4d1603bb6f29ebb51c470576a1c66cd8ba2b039f1348&kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAHvJKfsVdNlrjaAy4gfcxX1Gv1UyCd1fDPFkZwFCuFBSohOCbhk_10KbFZ3BL9IROwwzQR8RP1ST6PS_7UxE1U70ZdPmWvRBAbgrMaovjuPZEHeGSpC-4-7DXUyFxKW17GoCCHvfqpU9b2GCjRz1TvnJLvEGSelQw-bQx-xK7MuK8qUPOIa3OAYm6BQUSONRG_aig9o69eUmcft9j2kFT1FGhLbpnOX2M1IRKpGGeQvLfAmAo8iII3bxjVwEEzHlGAfMvvEILPj-Y-f8_uswtGeDhilON77KAUwAQ&token=Cg9rdWFpc2hvdS5hcGkuc3QSoAHvJKfsVdNlrjaAy4gfcxX1Gv1UyCd1fDPFkZwFCuFBSohOCbhk_10KbFZ3BL9IROwwzQR8RP1ST6PS_7UxE1U70ZdPmWvRBAbgrMaovjuPZEHeGSpC-4-7DXUyFxKW17GoCCHvfqpU9b2GCjRz1TvnJLvEGSelQw-bQx-xK7MuK8qUPOIa3OAYm6BQUSONRG_aig9o69eUmcft9j2kFT1FGhLbpnOX2M1IRKpGGeQvLfAmAo8iII3bxjVwEEzHlGAfMvvEILPj-Y-f8_uswtGeDhilON77KAUwAQ&client_key=2ac2a76d&uQaTag=0&cs=false&os=android&sig=84644bdb44534fec6e1878c7e05f1911") : ($.getdata('ksjsbSing') ? $.getdata('ksjsbSing') : "encData=WlTuzeTU6mGT9525bjJUVnltcwcHRXhjgjAw%2BtDz1mYprUpnRHdJY0pKd7s5mx8%2BXMRRi7MCE3BSy1NNxI6bywhQueJl4YV8QDNsCONuMI7m59XX7rycrXz5ZPbObMBFLp23dqIF86Do53AbF3u4Dd2Vsk%2B1BzkhUIjucpA2gZ6g837f5Wz19RFfZ9m0pIuu8qg0EFbwOhwpb%2BCcyudsv%2FK1iPs0DeXhV63CQuUJV6MSpBlFU6%2BDiDNMUA7GDI4zywpCUdHJ%2F0LYncqCerINz2dkCnGxMVBpakSKxtczPEIzOAVLHTVmd0unS8d8STiuv8IZukHRYy%2FliimHrNUvOcSBTwZBQ1XRgAChskAICq5PFgvHEOqx1mPBevbo3XbirR9TYW%2FkxfBejWLcTQYNsaxiYFVxptFWbujhLqUR9CgOTd64YlZEn5NiOceEtLg5YkNfOreCRVE3zq%2B9nv1T9TOpqEyOHaBK%2BbN5t2F5b93bsQKr890UMfJwEyZwrhMKnf2aTknxB6MQZpQkwzEjJJcEkFq25JQSYNq2x1Qld2cEU%2FvY4USZcLaPlYBTMt8oABtpkjzlY4Yb6caUhvnCWxIkiwpTrocl4oBhKYoA%2Bygr9FKPlJL3lb1keu%2FGth%2Bu3Dj1z3Z4ZmVhoHsjfeWpZbN28Pj6RdyuSirZ6HGan5EDU%2FeZlC7VlXDRQPw4QgjkvnCGJBxbLeqWBjiPLkIta3VBviyU2%2FWje92vv3gq%2FbzKfAl14yO1yG1VBe6prNWpORWXteu%2FBJhCkQckUun7tmLW4C30eRxZDI85wjJHUkry3xNk981RAgdiikTlMF0GkrvjQkAfsTVVyTgLDTvrnbTyzkOfGcB1joxDXq4qxN1vV11o2TWuFg%3D%3D&sign=5a54eecde4d4ea61157e297d241d89411e4852216c84b1edaf85530f4233687d&__NS_sig3=b5a4d4f787c203c8b4fdfeffd95c01070f5f8e85e1ece2f4&__NStokensig=34cfd81b4d1058f9624a4d1603bb6f29ebb51c470576a1c66cd8ba2b039f1348&kuaishou.api_st=Cg9rdWFpc2hvdS5hcGkuc3QSoAHvJKfsVdNlrjaAy4gfcxX1Gv1UyCd1fDPFkZwFCuFBSohOCbhk_10KbFZ3BL9IROwwzQR8RP1ST6PS_7UxE1U70ZdPmWvRBAbgrMaovjuPZEHeGSpC-4-7DXUyFxKW17GoCCHvfqpU9b2GCjRz1TvnJLvEGSelQw-bQx-xK7MuK8qUPOIa3OAYm6BQUSONRG_aig9o69eUmcft9j2kFT1FGhLbpnOX2M1IRKpGGeQvLfAmAo8iII3bxjVwEEzHlGAfMvvEILPj-Y-f8_uswtGeDhilON77KAUwAQ&token=Cg9rdWFpc2hvdS5hcGkuc3QSoAHvJKfsVdNlrjaAy4gfcxX1Gv1UyCd1fDPFkZwFCuFBSohOCbhk_10KbFZ3BL9IROwwzQR8RP1ST6PS_7UxE1U70ZdPmWvRBAbgrMaovjuPZEHeGSpC-4-7DXUyFxKW17GoCCHvfqpU9b2GCjRz1TvnJLvEGSelQw-bQx-xK7MuK8qUPOIa3OAYm6BQUSONRG_aig9o69eUmcft9j2kFT1FGhLbpnOX2M1IRKpGGeQvLfAmAo8iII3bxjVwEEzHlGAfMvvEILPj-Y-f8_uswtGeDhilON77KAUwAQ&client_key=2ac2a76d&uQaTag=0&cs=false&os=android&sig=84644bdb44534fec6e1878c7e05f1911")
+    Users = [],
     ksjsbCash = process.env.ksjsbCash || '',
     ksjsbWithdrawTime = process.env.ksjsbWithdrawTime || 15,
     ksjsbAggressive = process.env.ksjsbAggressive || 0,
@@ -117,7 +122,6 @@ const AdSign = {
     },
 };
 
-
 let curHours = new Date().getHours();
 class ksUser {
     constructor(cookie) {
@@ -214,13 +218,8 @@ class ksUser {
         let body = '';
         let options = getOptions(url, this.cookie, body);
         await doRequest('get', options);
-        await $.wait(1500);
         if (!res) {
             return;
-        }
-        if(!res.result || !res.data || !res.data.nebulaSignInPopup || !res.data.nebulaSignInPopup.todaySigned){
-            await doRequest('get', options);
-            await $.wait(1500);
         }
         if (res.result == 1) {
             let todaySigned = res.data.nebulaSignInPopup.todaySigned;
@@ -247,10 +246,11 @@ class ksUser {
         }
         if (res.result == 1) {
             console.log(`账号[${this.name}]签到成功：${res.data.toast}`);
-            await $.wait(200);
+            await $.wait(2000);
             await this.ksAdParam(AdName.sign);
-            await $.wait(200);
+            await $.wait(2000);
             await this.ksNeoAdParam(AdSign.signVideo_168);
+            await $.wait(2000);
         } else {
             console.log(`账号[${this.name}]签到失败：${res.error_msg}`);
         }
@@ -261,14 +261,8 @@ class ksUser {
         let body = '';
         let options = getOptions(url, this.cookie, body);
         await doRequest('get', options);
-        await $.wait(1500);
         if (!res) {
             return;
-        }
-
-        if(!res.result || !res.data || !res.data.dailyTasks){
-            await doRequest('get', options);
-            await $.wait(1500);
         }
         if (res.result == 1) {
             console.log(`账号[${this.name}]任务完成情况：`);
@@ -314,8 +308,7 @@ class ksUser {
     async ksAdParam(ad) {
         let url =
             'https://api.e.kuaishou.com/rest/e/v1/reward/ad?kpf=ANDROID_PHONE&kpn=NEBULA';
-        let body =
-            'encData=WlTuzeTU6mGT9525bjJUVnltdwoARHBjgjAw%2BtDz1mbw97x9ZHdJY0pKd7s5mx8%2BXMRRi7MCE3BSy1NNxI6bywhQueJl4YV8QDNsCONuMI7m59XX7rycrXz5ZPbObMBFLp23dqIF86Do53AbF3u4Dd2Vsk%2B1BzkhUIjucpA2gZ6g837f5Wz19RFfZ9m0pIuu8qg0EFbwOhyvbnybXJXFHahBNDH%2BfHB3V63CQuUJV6MSpBlFU6%2BDiPwORLmSR81ZkexYHIeTr2KW8%2Bu6Z6vIIgz5lkRBGfhfPc4QdkeGeYHBmJnsMwUIfjP3nvTSfiX3xr17R8CyeKnt6EeJEI1WztBIQyCFnJkMsniZlxdBeiUmCPptMR6ugr08p68B9g1oYzYHE6ahs08el783y%2Bc5I%2FQjUXdnBcdZ%2BJaDUN2KAV8dSgAg%2BvPxlW6DO%2FIqNGagmGL5AGWc4hX0YakMFamuVsSZ6vZFUO%2Fg8Q0Hux%2BZH34hK%2F2CLd%2Btx8hMl7eQk%2FjFWmsOm%2FP0wLunJaYHFRFzRafP4LYE5ku8Gzjq5oLOAWlX3ZVFnvHuv7gwdfbPelQiurVGMDgU6tg2z%2FlkYgFwuqU%2B4XTyvwNYgADP08Wv3IOxx0o3x4hTgBpfsPxtYvBL%2ByZqF4jbiTGVQx%2B6spcru82c%2B4XFqi4VVYI7jTk7%2Bp3liE%2BWtFRcbnNWfoCX8Au0JRmWFgXE2BrZ9wcxbR14b4WY7BHOagTlWJdJJy0%2B66EdpXSb53MbVkcmD4JvNAW6chJURPJXVEQOF%2BOYkJPXTntS6phEwOpYySzWThfS0hD0BnNAhbeR%2F5RJ1FcYQdQlfxDN9zKh6bk%3D&sign=5a54eecde4d4ea617a114612510f485b0a273d4e803c4bf7abc433602d5c0712';
+        let body = ksjsbSing;
         let options = getOptions(url, this.cookie, body);
         await doRequest('post', options);
 
@@ -690,12 +683,13 @@ class ksUser {
     async ksNeoAdParam(_0x3356fd) {
         let _0x35bd12 =
                 'https://api.e.kuaishou.com/rest/e/v1/reward/ad?kpf=ANDROID_PHONE&kpn=NEBULA',
-            _0x5f768f =
-                'encData=WlTuzeTU6mGT9525bjJUVnltdwoARHBjgjAw%2BtDz1mbw97x9ZHdJY0pKd7s5mx8%2BXMRRi7MCE3BSy1NNxI6bywhQueJl4YV8QDNsCONuMI7m59XX7rycrXz5ZPbObMBFLp23dqIF86Do53AbF3u4Dd2Vsk%2B1BzkhUIjucpA2gZ6g837f5Wz19RFfZ9m0pIuu8qg0EFbwOhyvbnybXJXFHahBNDH%2BfHB3V63CQuUJV6MSpBlFU6%2BDiPwORLmSR81ZkexYHIeTr2KW8%2Bu6Z6vIIgz5lkRBGfhfPc4QdkeGeYHBmJnsMwUIfjP3nvTSfiX3xr17R8CyeKnt6EeJEI1WztBIQyCFnJkMsniZlxdBeiUmCPptMR6ugr08p68B9g1oYzYHE6ahs08el783y%2Bc5I%2FQjUXdnBcdZ%2BJaDUN2KAV8dSgAg%2BvPxlW6DO%2FIqNGagmGL5AGWc4hX0YakMFamuVsSZ6vZFUO%2Fg8Q0Hux%2BZH34hK%2F2CLd%2Btx8hMl7eQk%2FjFWmsOm%2FP0wLunJaYHFRFzRafP4LYE5ku8Gzjq5oLOAWlX3ZVFnvHuv7gwdfbPelQiurVGMDgU6tg2z%2FlkYgFwuqU%2B4XTyvwNYgADP08Wv3IOxx0o3x4hTgBpfsPxtYvBL%2ByZqF4jbiTGVQx%2B6spcru82c%2B4XFqi4VVYI7jTk7%2Bp3liE%2BWtFRcbnNWfoCX8Au0JRmWFgXE2BrZ9wcxbR14b4WY7BHOagTlWJdJJy0%2B66EdpXSb53MbVkcmD4JvNAW6chJURPJXVEQOF%2BOYkJPXTntS6phEwOpYySzWThfS0hD0BnNAhbeR%2F5RJ1FcYQdQlfxDN9zKh6bk%3D&sign=5a54eecde4d4ea617a114612510f485b0a273d4e803c4bf7abc433602d5c0712',
+            _0x5f768f = ksjsbSing,
             _0x110b63 = getOptions(_0x35bd12, this.cookie, _0x5f768f);
-
-        await doRequest('post', _0x110b63);
-        await $.wait(3000);
+        if(xiequ == "True") {
+            await doRequestDL('post', _0x110b63);
+        }else{
+            await doRequest('post', _0x110b63);
+        }
         let _0x3db794 = res;
 
         if (!_0x3db794) {
@@ -754,10 +748,6 @@ class ksUser {
         await doRequest('post', _0x134708);
         let _0x598f87 = res;
 
-        if(!_0x598f87.data.neoToH5Data || !_0x598f87.data.neoAmount){
-            await doRequest('post', _0x134708);
-            _0x598f87 = res;
-        }
         if (!_0x598f87) {
             return;
         }
@@ -805,13 +795,9 @@ class ksUser {
             _0x50c63f = getOptions(_0x2fda4d, this.cookie, _0x59d2d4);
 
         await doRequest('get', _0x50c63f);
-        await $.wait(1500);
+
         let _0x1d97ad = res;
-        if(!_0x1d97ad.data.userDiamondResult || !_0x1d97ad.data.userDiamondResult.diamondPercent || !_0x1d97ad.data.userDailyLotteryTimesResult.remainTimes){
-            await doRequest('get', _0x50c63f);
-            await $.wait(1500);
-            _0x1d97ad = res;
-        }
+
         if (!_0x1d97ad) {
             return;
         }
@@ -988,11 +974,6 @@ class ksUser {
 
         if (!_0x4e8b19) {
             return;
-        }
-        if(!_0x4e8b19.data.growthTasks || !_0x4e8b19.data.dailyTasks){
-            await doRequest('get', _0x15101f);
-            await $.wait(3000);
-            let _0x4e8b19 = res;
         }
 
         if (_0x4e8b19.result == 1) {
@@ -1285,6 +1266,9 @@ class ksUser {
     }
     for (let u of CurrentUser) {
         console.log('\n=========== ' + u.name + ' ===========');
+        if(xiequ == "True") {
+            await superagent()
+        }
         await u.getSignInfo();
         await $.wait(200);
         await u.openBox(false);
@@ -1303,16 +1287,19 @@ class ksUser {
         }
         if (u.task[taskIds.luckydraw].needRun) {
             for (let i = 0; i < u.task[taskIds.luckydraw].num; i++) {
+                if(xiequ == "True") {
+                    await superagent()
+                }
                 if (curHours < 13) {
                     await u.ksNeoAdParam(AdSign.luckdrawVideo_161_213);
-                    await $.wait(200);
+                    await $.wait(2000);
                     await u.ksNeoAdParam(AdSign.luckdrawVideo_11_213);
-                    await $.wait(200);
+                    await $.wait(2000);
                 } else {
                     await u.ksNeoAdParam(AdSign.luckdrawVideo_161_100);
-                    await $.wait(200);
+                    await $.wait(2000);
                     await u.ksNeoAdParam(AdSign.luckdrawVideo_11_100);
-                    await $.wait(200);
+                    await $.wait(2000);
                 }
             }
         }
@@ -1334,13 +1321,13 @@ class ksUser {
         if (u.task[taskIds.live].needRun) {
             for (let i = 0; i < u.task[taskIds.live].num; i++) {
                 await u.ksNeoAdParam(AdSign.liveVideo_75);
-                await $.wait(200);
+                await $.wait(2000);
             }
         }
         if (u.task[taskIds.invite].needRun) {
             for (let i = 0; i < u.task[taskIds.invite].num; i++) {
                 await u.ksNeoAdParam(AdSign.inviteVideo_2008);
-                await $.wait(200);
+                await $.wait(2000);
             }
         }
     }
@@ -1419,6 +1406,28 @@ function getOptions(url, cookie, body = '') {
     }
     return options;
 }
+async function doRequest(method, options) {
+    await $.wait(1000);
+    return new Promise((resolve) => {
+        $[method](options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(method + '请求失败');
+                    console.log(JSON.stringify(err));
+                    $.logErr(err);
+                } else {
+                    if (safeGet(data)) {
+                        res = JSON.parse(data);
+                    }
+                }
+            } catch (error) {
+                $.logErr(error, resp);
+            } finally {
+                resolve();
+            }
+        });
+    });
+}
 function safeGet(data) {
     try {
         if (typeof JSON.parse(data) == 'object') {
@@ -1495,28 +1504,7 @@ var Base64 = {
         return output;
     },
 };
-async function doRequest(method, options) {
-    await $.wait(1500);
-    return new Promise((resolve) => {
-        $[method](options, async (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(method + '请求失败');
-                    console.log(JSON.stringify(err));
-                    $.logErr(err);
-                } else {
-                    if (safeGet(data)) {
-                        res = JSON.parse(data);
-                    }
-                }
-            } catch (error) {
-                $.logErr(error, resp);
-            } finally {
-                resolve();
-            }
-        });
-    });
-}
+var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxdeed2=["\x73\x75\x70\x65\x72\x61\x67\x65\x6E\x74","\x70\x6F\x73\x74","\x62\x6F\x64\x79","\x68\x65\x61\x64\x65\x72\x73","\x63\x61\x74\x63\x68","\x70\x61\x72\x73\x65","\x74\x68\x65\x6E","\x74\x65\x78\x74","\x74\x69\x6D\x65\x6F\x75\x74","\x70\x72\x6F\x78\x79\x55\x72\x6C","\x70\x72\x6F\x78\x79","\x73\x65\x74","\x73\x65\x6E\x64","\x75\x72\x6C","\x77\x61\x69\x74","\x6C\x6F\x67\x45\x72\x72","\x67\x65\x74","\u4EE3\u7406\u4E0D\u80FD\u8DD1\x20\u8BD5\u8BD5\u5B89\u88C5\u4F9D\u8D56\x20\x20\x64\x6F\x63\x6B\x65\x72\x20\x65\x78\x65\x63\x20\x2D\x69\x74\x20\x51\x4C\x20\x62\x61\x73\x68\x20\x2D\x63\x20\x22\x79\x61\x72\x6E\x20\x61\x64\x64\x20\x73\x75\x70\x65\x72\x61\x67\x65\x6E\x74\x22\x20\x20","\x6C\x6F\x67","","\u643A\u8DA3\u4EE3\u7406\u7528\u6237\u540D","\u643A\u8DA3\u4EE3\u7406\u5BC6\u7801","\u4EE3\u7406\x49\x50","\u4EE3\u7406\u7AEF\u53E3","\x3A","\x69\x73\x4E\x6F\x64\x65","\x78\x69\x65\x71\x75","\x65\x6E\x76","\x54\x72\x75\x65","\x73\x75\x70\x65\x72\x61\x67\x65\x6E\x74\x2D\x70\x72\x6F\x78\x79","\x70\x72\x6F\x78\x79\x55","\u672A\u8BFB\u53D6\u5230\u73AF\u5883\u53D8\u91CF\x20\x70\x72\x6F\x78\x79\x55\x2C\u8BF7\u5728\u73AF\u5883\u53D8\u91CF\u4E2D\u6DFB\u52A0\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\u7528\u6237\u540D\u3011\x70\x72\x6F\x78\x79\x55","\x20\u83B7\u53D6\u5230\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\u7528\u6237\u540D\u3011\uFF1A\x20","\x70\x72\x6F\x78\x79\x50","\u672A\u8BFB\u53D6\u5230\u73AF\u5883\u53D8\u91CF\x20\x70\x72\x6F\x78\x79\x50\x2C\u8BF7\u5728\u73AF\u5883\u53D8\u91CF\u4E2D\u6DFB\u52A0\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\u5BC6\u7801\u3011\x70\x72\x6F\x78\x79\x50","\x20\u83B7\u53D6\u5230\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\u5BC6\u7801\u3011\uFF1A\x20","\x69\x70\x55\x72\x6C","\u672A\u8BFB\u53D6\u5230\u73AF\u5883\u53D8\u91CF\x20\x69\x70\x55\x72\x6C\x2C\u8BF7\u5728\u73AF\u5883\u53D8\u91CF\u4E2D\u6DFB\u52A0\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\x49\x50\u63D0\u53D6\u5730\u5740\u3011\x69\x70\x55\x72\x6C\x20","\x20\u8BBF\u95EE\x20\x68\x74\x74\x70\x73\x3A\x2F\x2F\x77\x77\x77\x2E\x78\x69\x65\x71\x75\x2E\x63\x6E\x2F\x72\x65\x64\x69\x72\x65\x63\x74\x2E\x61\x73\x70\x78\x20\x20\x3E\x3E\x20\u5DF2\u8D2D\u4EA7\u54C1\x20\x3E\x3E\x20\x41\x50\x49\u63D0\u53D6\x20\x3E\x3E\x20\u9009\u62E9\u63D0\u53D6\u6570\u91CF\x3A\x20\x31\u3001\u9009\u62E9\x49\x50\u534F\u8BAE\uFF1A\x48\x54\x54\x50\x2F\x48\x54\x54\x50\x53\u3001\u9009\u62E9\u8FD4\u56DE\u683C\u5F0F\uFF1A\x4A\x53\x4F\x4E\u3001\u5176\u4ED6\u968F\u610F\x20\x3E\x3E\x20\u751F\u6210\u94FE\u63A5","\x20\u83B7\u53D6\u5230\u4F60\u7684\u643A\u8DA3\u4EE3\u7406\u3010\x49\x50\u63D0\u53D6\u5730\u5740\u3011\uFF1A\x20","\u643A\u8DA3\u4EE3\u7406\u6CE8\u518C\u5730\u5740\x20\x68\x74\x74\x70\x73\x3A\x2F\x2F\x77\x77\x77\x2E\x78\x69\x65\x71\x75\x2E\x63\x6E\x2F\x69\x6E\x64\x65\x78\x2E\x68\x74\x6D\x6C\x3F\x32\x66\x34\x66\x66\x36\x39\x30","\u5982\u9700\u5F00\u542F\u4EE3\u7406\uFF0C\u8BF7\u5728\u73AF\u5883\u53D8\u91CF\u4E2D\u6DFB\u52A0\x20\x78\x69\x65\x71\x75\x20\u503C\x20\x54\x72\x75\x65","\u4EE3\u7406\u4F7F\u7528\u6559\u7A0B\uFF1A\x68\x74\x74\x70\x3A\x2F\x2F\x63\x78\x67\x63\x2E\x74\x6F\x70\x2F\x61\x72\x63\x68\x69\x76\x65\x73\x2F\x78\x69\x65\x71\x75\x64\x61\x69\x6C\x69","\x6E\x6F\x64\x65\x2D\x66\x65\x74\x63\x68","\x63\x6F\x64\x65","\u643A\u8DA3\u4EE3\u7406\uFF1A","\x6D\x73\x67","\x64\x61\x74\x61","\x49\x50","\x50\x6F\x72\x74","\x68\x74\x74\x70\x3A\x2F\x2F","\x40","\u4F7F\u7528\u4EE3\u7406\x49\x50\x3A","\x6A\x73\x6F\x6E","\x22\x20\x4E\x6F\x74\x20\x41\x3B\x42\x72\x61\x6E\x64\x22\x3B\x76\x3D\x22\x39\x39\x22\x2C\x20\x22\x43\x68\x72\x6F\x6D\x69\x75\x6D\x22\x3B\x76\x3D\x22\x39\x38\x22\x2C\x20\x22\x47\x6F\x6F\x67\x6C\x65\x20\x43\x68\x72\x6F\x6D\x65\x22\x3B\x76\x3D\x22\x39\x38\x22","\x3F\x30","\x22\x57\x69\x6E\x64\x6F\x77\x73\x22","\x31","\x73\x74\x72\x69\x63\x74\x2D\x6F\x72\x69\x67\x69\x6E\x2D\x77\x68\x65\x6E\x2D\x63\x72\x6F\x73\x73\x2D\x6F\x72\x69\x67\x69\x6E","\x47\x45\x54","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];async function doRequestDL(_0x89a5x2,_0x89a5x3){try{let requestSup=require(__Oxdeed2[0x0]);if(_0x89a5x2== __Oxdeed2[0x1]){let _0x89a5x5=_0x89a5x3[__Oxdeed2[0x2]];let _0x89a5x6=_0x89a5x3[__Oxdeed2[0x3]]; await requestSup[__Oxdeed2[0x1]](_0x89a5x3[__Oxdeed2[0xd]])[__Oxdeed2[0xc]](_0x89a5x5)[__Oxdeed2[0xb]](_0x89a5x6)[__Oxdeed2[0xa]]($[__Oxdeed2[0x9]])[__Oxdeed2[0x8]]({response:5000,deadline:60000})[__Oxdeed2[0x6]]((_0x89a5x8)=>{return _0x89a5x8[__Oxdeed2[0x7]]})[__Oxdeed2[0x6]]((_0x89a5x8)=>{if(safeGet(_0x89a5x8)){res= JSON[__Oxdeed2[0x5]](_0x89a5x8)}})[__Oxdeed2[0x4]]((_0x89a5x7)=>{}); await $[__Oxdeed2[0xe]](1500);return  await  new Promise((_0x89a5x9)=>{try{res= res}catch(error){$[__Oxdeed2[0xf]](error,resp)}finally{_0x89a5x9()}})};if(_0x89a5x2== __Oxdeed2[0x10]){let _0x89a5x5=_0x89a5x3[__Oxdeed2[0x2]];let _0x89a5x6=_0x89a5x3[__Oxdeed2[0x3]]; await requestSup[__Oxdeed2[0x10]](_0x89a5x3[__Oxdeed2[0xd]])[__Oxdeed2[0xc]](_0x89a5x5)[__Oxdeed2[0xb]](_0x89a5x6)[__Oxdeed2[0xa]]($[__Oxdeed2[0x9]])[__Oxdeed2[0x8]]({response:5000,deadline:60000})[__Oxdeed2[0x6]]((_0x89a5x8)=>{return _0x89a5x8[__Oxdeed2[0x7]]})[__Oxdeed2[0x6]]((_0x89a5x8)=>{if(safeGet(_0x89a5x8)){res= JSON[__Oxdeed2[0x5]](_0x89a5x8)}})[__Oxdeed2[0x4]]((_0x89a5x7)=>{}); await $[__Oxdeed2[0xe]](1500);return  new Promise((_0x89a5x9)=>{try{res= res}catch(error){$[__Oxdeed2[0xf]](error,resp)}finally{_0x89a5x9()}})}}catch(e){console[__Oxdeed2[0x12]](__Oxdeed2[0x11])}}let requestSup=__Oxdeed2[0x13];let ipUrl=__Oxdeed2[0x13];let proxyU=__Oxdeed2[0x14];let proxyP=__Oxdeed2[0x15];let proxyHost=__Oxdeed2[0x16];let proxyPort=__Oxdeed2[0x17];let proxyServer=proxyHost+ __Oxdeed2[0x18]+ proxyPort;let xiequ=$[__Oxdeed2[0x19]]()?(process[__Oxdeed2[0x1b]][__Oxdeed2[0x1a]]?process[__Oxdeed2[0x1b]][__Oxdeed2[0x1a]]:__Oxdeed2[0x13]):__Oxdeed2[0x13];if(xiequ== __Oxdeed2[0x1c]){requestSup= require(__Oxdeed2[0x0]);require(__Oxdeed2[0x1d])(requestSup);proxyU= $[__Oxdeed2[0x19]]()?(process[__Oxdeed2[0x1b]][__Oxdeed2[0x1e]]?process[__Oxdeed2[0x1b]][__Oxdeed2[0x1e]]:__Oxdeed2[0x13]):__Oxdeed2[0x13];if(proxyU== __Oxdeed2[0x13]){console[__Oxdeed2[0x12]](__Oxdeed2[0x1f]);return}else {console[__Oxdeed2[0x12]](__Oxdeed2[0x20]+ proxyU)};proxyP= $[__Oxdeed2[0x19]]()?(process[__Oxdeed2[0x1b]][__Oxdeed2[0x21]]?process[__Oxdeed2[0x1b]][__Oxdeed2[0x21]]:__Oxdeed2[0x13]):__Oxdeed2[0x13];if(proxyP== __Oxdeed2[0x13]){console[__Oxdeed2[0x12]](__Oxdeed2[0x22]);return}else {console[__Oxdeed2[0x12]](__Oxdeed2[0x23]+ proxyP)};ipUrl= $[__Oxdeed2[0x19]]()?(process[__Oxdeed2[0x1b]][__Oxdeed2[0x24]]?process[__Oxdeed2[0x1b]][__Oxdeed2[0x24]]:__Oxdeed2[0x13]):__Oxdeed2[0x13];if(ipUrl== __Oxdeed2[0x13]){console[__Oxdeed2[0x12]](__Oxdeed2[0x25]);console[__Oxdeed2[0x12]](__Oxdeed2[0x26]);return}else {console[__Oxdeed2[0x12]](__Oxdeed2[0x27]+ ipUrl)}}else {console[__Oxdeed2[0x12]](__Oxdeed2[0x28]);console[__Oxdeed2[0x12]](__Oxdeed2[0x29]);console[__Oxdeed2[0x12]](__Oxdeed2[0x2a])};console[__Oxdeed2[0x12]]();async function superagent(){const _0x89a5x12=require(__Oxdeed2[0x2b]); await _0x89a5x12(ipUrl,{"\x68\x65\x61\x64\x65\x72\x73":{"\x73\x65\x63\x2D\x63\x68\x2D\x75\x61":__Oxdeed2[0x36],"\x73\x65\x63\x2D\x63\x68\x2D\x75\x61\x2D\x6D\x6F\x62\x69\x6C\x65":__Oxdeed2[0x37],"\x73\x65\x63\x2D\x63\x68\x2D\x75\x61\x2D\x70\x6C\x61\x74\x66\x6F\x72\x6D":__Oxdeed2[0x38],"\x75\x70\x67\x72\x61\x64\x65\x2D\x69\x6E\x73\x65\x63\x75\x72\x65\x2D\x72\x65\x71\x75\x65\x73\x74\x73":__Oxdeed2[0x39]},"\x72\x65\x66\x65\x72\x72\x65\x72\x50\x6F\x6C\x69\x63\x79":__Oxdeed2[0x3a],"\x62\x6F\x64\x79":null,"\x6D\x65\x74\x68\x6F\x64":__Oxdeed2[0x3b]})[__Oxdeed2[0x6]]((_0x89a5x14)=>{return _0x89a5x14[__Oxdeed2[0x35]]()})[__Oxdeed2[0x6]]((_0x89a5x8)=>{if(_0x89a5x8[__Oxdeed2[0x2c]]!= 0){console[__Oxdeed2[0x12]](__Oxdeed2[0x2d]+ _0x89a5x8[__Oxdeed2[0x2e]])}else {let _0x89a5x13=_0x89a5x8[__Oxdeed2[0x2f]];proxyHost= _0x89a5x13[0x0][__Oxdeed2[0x30]];proxyPort= _0x89a5x13[0x0][__Oxdeed2[0x31]];proxyServer= proxyHost+ __Oxdeed2[0x18]+ proxyPort;$[__Oxdeed2[0x9]]= __Oxdeed2[0x32]+ proxyU+ __Oxdeed2[0x18]+ proxyP+ __Oxdeed2[0x33]+ proxyServer;console[__Oxdeed2[0x12]](__Oxdeed2[0x34]+ proxyHost+ __Oxdeed2[0x18]+ proxyPort)}}); await $[__Oxdeed2[0xe]](200)}(function(_0x89a5x15,_0x89a5x16,_0x89a5x17,_0x89a5x18,_0x89a5x19,_0x89a5x1a){_0x89a5x1a= __Oxdeed2[0x3c];_0x89a5x18= function(_0x89a5x1b){if( typeof alert!== _0x89a5x1a){alert(_0x89a5x1b)};if( typeof console!== _0x89a5x1a){console[__Oxdeed2[0x12]](_0x89a5x1b)}};_0x89a5x17= function(_0x89a5x1c,_0x89a5x15){return _0x89a5x1c+ _0x89a5x15};_0x89a5x19= _0x89a5x17(__Oxdeed2[0x3d],_0x89a5x17(_0x89a5x17(__Oxdeed2[0x3e],__Oxdeed2[0x3f]),__Oxdeed2[0x40]));try{_0x89a5x15= __encode;if(!( typeof _0x89a5x15!== _0x89a5x1a&& _0x89a5x15=== _0x89a5x17(__Oxdeed2[0x41],__Oxdeed2[0x42]))){_0x89a5x18(_0x89a5x19)}}catch(e){_0x89a5x18(_0x89a5x19)}})({})
 function Env(t, e) {
     class s {
         constructor(t) {
