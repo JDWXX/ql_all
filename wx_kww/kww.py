@@ -3,7 +3,6 @@
 cron: 0 30 0 * * *
 new Env('微信小程序-口味王');
 """
-import json
 import time
 import os
 
@@ -250,6 +249,11 @@ if __name__ == '__main__':
             'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=setNewsReadTaskFlag&formName=addForm&memberId=' +
             mycookies[i] + '&userCname=JDWXX&articleTitle=undefined', headers)
         print("阅读日期：" + jf['rows'][0])
+        print("【收青果】")
+        jf = getApi(
+            'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=activeTaskFlag&formName=editForm&memberId=' +
+            mycookies[i] + '&userCname=JDWXX', headers)
+        print("收青果日期：" + jf['rows'][0])
         print("【答题任务】")
         url = 'https://member.kwwblcj.com/member/api/info/?userKeys=v1.0&pageName=loginFreePlugin&formName=searchForm&uid=' + \
               mycookies[

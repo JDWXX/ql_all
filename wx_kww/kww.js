@@ -156,6 +156,9 @@ function txBy(url,body) {
                 console.log("【每日阅读】")
                 jf = await tx('https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=setNewsReadTaskFlag&formName=addForm&memberId=' + cookie + '&userCname=JDWXX&articleTitle=undefined')
                 console.log("阅读日期：" + jf.rows)
+                console.log("【收青果】")
+                jf = await tx('https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=setNewsReadTaskFlag&formName=addForm&memberId=' + cookie + '&userCname=JDWXX')
+                console.log("收青果：" + jf.rows)
 
             }catch (e){
 
