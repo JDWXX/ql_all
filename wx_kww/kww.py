@@ -5,6 +5,9 @@ new Env('微信小程序-口味王');
 """
 import time
 import os
+import re
+import hashlib
+import json
 
 try:
     import requests
@@ -22,154 +25,159 @@ except:
     print("【提示】请先获取微信小程序[口味王]cookie,环境变量添加 KWW_COOKIE ,如有不懂加群：212796668、681030097、743744614")
     exit(3)
 '''
-#1|“口味王”是槟榔行业领先品牌吗？——正确
-#2|“口味王”槟榔曾冠名过《这！就是灌篮3》吗？——正确
-#3|“口味王”槟榔曾赞助过综艺《这！就是街舞4》吗？——正确
-#4|“口味王”是槟榔行业领导品牌；——正确
-#5|“以下哪些场景使用“口味王”槟榔可以秒回状态？——以上都是 '开车犯困||上网冲浪||熬夜加班||以上都是',
-#6|口味王已连续4年举办“我要上大学”公益活动？——正确
-#7|游戏上分时，使用“口味王”槟榔可以秒回状态？——正确
-#8|开车犯困的时候，使用“口味王”槟榔可以秒回状态？——正确
-#9|熬夜加班的时候，使用“口味王”槟榔可以秒回状态？——正确
-#10|槟榔品牌中，“口味王”槟榔销量全国领先吗？——正确
-#11|“口味王”槟榔曾赞助过电视剧《鬼吹灯之云南虫谷》吗？——正确
-#12|“口味王”槟榔曾赞助过电视剧《将夜2》吗？——正确
-#13|“口味王”槟榔曾赞助过电视剧《鬼吹灯之龙岭迷窟》吗？——正确
-#14|“口味王“槟榔曾赞助过电视剧《怒晴湘西》吗？——正确
-#15|“口味王”槟榔曾赞助过电视剧《巡回检察组》吗？——正确
-#16|“口味王”槟榔曾赞助《欢乐喜剧人5》吗？——正确
-#17|2019年“口味王”冠名虎牙英雄联盟S9全球总决赛直播吗？——正确
-#18|口味王已连续6年开展“温暖回家”公益活动——正确
-#19|“口味王”槟榔曾赞助过电视剧《巡警之海外行动》吗？——正确
-#20|“口味王”槟榔是_____的槟榔品牌。——全国销量领先 "全国销量领先","全国高端销量领先","湖南销量领先","湖南高端销量领先"
-#21|以下哪个是“和成天下”槟榔的特点？——以上全是 "10包高端槟榔，7包和成天下","全国高端销量领先","海南嫩青果，味美更耐嚼","以上全是"
-#22|“和成天下”槟榔是全国高端销量领先的槟榔品牌吗？——正确
-#23|10包高端槟榔，有几包是“和成天下”？——7 4,5,6,7
-#24|10包高端槟榔，有7包是“和成天下”对吗？——正确
-#25|“和成天下”采用的是哪个地方的槟榔果生产而成？——中国海南 中国台湾||印度尼西亚||中国海南||菲律宾
-#26|“和成天下”槟榔采用的是海南槟榔果制作而成的吗？——正确
-#27|“和成天下”槟榔生产需要多少道工艺？——22道
-#28|“和成天下”槟榔生产需要22道工艺？——正确
-#29|为什么“和成天下”槟榔不使用东南亚槟榔果？——以上都是 '果肉薄不耐嚼', '针刺状粗纤维多，易划破口腔', '易掉渣', '以上都是'
-#30|为什么“和成天下”坚持使用海南槟榔果生产？——以上都是 "海南槟榔果汁多肉厚","海南槟榔果果形匀称","海南槟榔果更耐嚼","以上都是"
-#31|高端槟榔市场占有率最高的品牌是“和成天下”吗？——正确
-#32|“和成天下”品牌采用海南原果的比例是多少？——100% "50%","80%","70%","100%"
-#33|“和成天下”是哪一类槟榔的引领者和典型代表？——高端槟榔
-#34|“和成天下”是高端槟榔槟榔的引领者和典型代表？——正确
-#35|“和成天下”是湖南人更爱吃的槟榔吗？——正确
-#36|“和成天下”曾赞助过芒果TV《野生厨房》吗？——正确
-#37|“和成天下”采用的是_____槟榔？——海南嫩青果 '海南老果', '台湾嫩果', '越南嫩果', '海南嫩青果'
-#38|“和成天下”采用的是_____槟榔？——海南嫩青果 海南嫩青果,湖南嫩青果,河南嫩青果,云南嫩青果
-#39|“和成天下”品牌广告语：“海南_______，味美更耐嚼”——嫩青果 好果子,万宁果,嫩青果,秋前果
-#40|“和成天下”品牌广告语：“海南嫩青果，_____更_____“——美味 耐嚼  '美味 多汁', '美味 耐嚼', '味美 多汁', '味美 耐嚼'
-#41|“和成天下”品牌广告语：“_____嫩青果，味美更耐嚼”——海南
-#42|“和成天下”槟榔原果来自全球槟榔黄金产区——海南吗？——正确
-#43|“和成天下”槟榔是_____的槟榔品牌。——全国高端销量领先 "全国销量领先","全国高端销量领先","湖南销量领先","湖南高端销量领先"
-#44|海南的槟榔果有什么特点——以上都是 "汁多肉厚","果形匀称","耐嚼","以上都是"
-#45|全球槟榔的黄金产区在哪里——中国海南 "印度尼西亚","中国台湾","菲律宾","中国海南"
-#46|海南的三大支柱产业是什么？——槟榔、椰子、橡胶   椰子、橡胶、芒果,槟榔、椰子、橡胶,槟榔、椰子、芒果,槟榔、橡胶、芒果
-#47|海南是全球槟榔的黄金产区吗？——正确
-#48|与东南亚槟榔相比，海南槟榔更适合加工成干果进行咀嚼吗？——正确
-#49|与东南亚槟榔相比，海南槟榔香气风味释放更持久，更耐嚼吗？——正确
-#50|中国“四大南药”之首是什么？——槟榔 "益智仁","槟榔","砂仁","巴戟天"
-#51|白居易的千古名句：“戴花红石竹，帔晕紫_____”——槟榔 "枸杞","黄芪","人参","槟榔"
-#52|《本草纲目》中描述槟榔有哪些功效？——以上都是 解油,驱虫,除胀,以上都是
-#53|邓丽君的歌曲：“高高的树上结_____，谁先爬上谁先尝”——槟榔 槟榔,椰子,榴莲,菠萝蜜
-#54| 异味谁栽向海滨，亭亭直干乱枝分。”这句诗描写的是哪种植物？——槟榔树 '椰子树', '橡胶树', '槟榔树', '橄榄树'
-#55|“可疗饥怀香自吐，能消瘴疠暖如熏。”这句诗描写的是哪种植物？——槟榔树 "椰子树","橡胶树","槟榔树","橄榄树"
-#56|西汉汉武帝曾制定_____作为皇室贡品进献——以上都是 "荔枝","槟榔","珍珠","以上都是"
-#57|槟榔起源于哪里？——马来西亚 "菲律宾","越南","印度尼西亚","马来西亚"
-#58|槟榔树生长几年后才开始结果？——5~6年 '1~2年', '2~3年', '4~5年', '5~6年'
-#59|海南万宁被称为什么——槟榔之乡 槟榔之乡,芒果之乡,椰子之乡,凤梨之乡
-#60|为什么海南是全球槟榔的黄金产区——以上都是 温差小,日照长,空气湿度高,以上都是
-#61|海南万宁的槟榔果是槟榔中的黄金圣果吗？——正确
-#62|国内嚼食槟榔以果肉为主，越南等东南亚国家则以带核槟榔为主——正确
-#63|与东南亚槟榔相比，海南槟榔纤维细腻更适合咀嚼吗？——正确
-#64|苏轼的千古名句：“两颊红潮增妩媚，谁知侬是醉_____——槟榔 '枸杞', '槟榔', '人参', '黄芪'
-#65|李白的千古名句：“何时黄金盘，一斛荐_____”——槟榔 "槟榔","黄芪","人参","枸杞"
-#66|“若笋竹生竿，种之精硬，引茎直上，不生枝叶。”描写的是哪种植物？——槟榔树 "椰子树","橡胶树","槟榔树","橄榄树"
-#67|“高高的树上结槟榔，谁先爬上谁先尝”是哪首歌的歌词？——《采槟榔》 "《采槟榔》","《摘槟榔》","《尝槟榔》","《品槟榔》"
-#68|“开花树杪翻青箨，结子苞中皱锦纹。”这句诗描写的是哪种植物？——槟榔树 "槟榔树","橡胶树","椰子树","橄榄树"
-#69|"人类使用榔的历史距今有多少年?" --3000年 "500年"1000年'，"2000年 ，3000年'
-#70|考古发现最早的槟榔遗骸是哪年？——公元前10,000年 "公元前1,000年","公元前3,000年","公元前7,000年","公元前10,000年"
-#71|“朗是宾门篓似妾，结成一对好鸳鸯。”这句诗描写的是哪种植物？——槟榔树 椰子树,橡胶树,橄榄树,槟榔树
-#72|槟榔果一般在什么时间采摘？——8~10月 8~10月,11~1月,2~4月,5~7月
 ====================== 题库 ===========================
 '''
-
-ktList = {'1': '正确',
-          '2': '正确',
-          '3': '正确',
-          '4': '正确',
-          '5': '以上都是',
-          '6': '正确',
-          '7': '正确',
-          '8': '正确',
-          '9': '正确',
-          '10': '正确',
-          '11': '正确',
-          '12': '正确',
-          '13': '正确',
-          '14': '正确',
-          '15': '正确',
-          '16': '正确',
-          '17': '正确',
-          '18': '正确',
-          '19': '正确',
-          '20': '全国销量领先',
-          '21': '以上全是',
-          '22': '正确',
-          '23': '7',
-          '24': '正确',
-          '25': '中国海南',
-          '26': '正确',
-          '27': '22道',
-          '28': '正确',
-          '29': '以上都是',
-          '30': '以上都是',
-          '31': '正确',
-          '32': '100%',
-          '33': '高端槟榔',
-          '34': '正确',
-          '35': '正确',
-          '36': '正确',
-          '37': '海南嫩青果',
-          '38': '海南嫩青果',
-          '39': '嫩青果',
-          '40': '嫩青果',
-          '41': '海南',
-          '42': '正确',
-          '43': '全国高端销量领先',
-          '44': '以上都是',
-          '45': '中国海南',
-          '46': '槟榔、椰子、橡胶',
-          '47': '正确',
-          '48': '正确',
-          '49': '正确',
-          '50': '槟榔',
-          '51': '槟榔',
-          '52': '以上都是',
-          '53': '槟榔',
-          '54': '槟榔树',
-          '55': '槟榔树',
-          '56': '以上都是',
-          '57': '马来西亚',
-          '58': '5~6年',
-          '59': '槟榔之乡',
-          '60': '以上都是',
-          '61': '正确',
-          '62': '正确',
-          '63': '正确',
-          '64': '槟榔',
-          '65': '槟榔',
-          '66': '槟榔树',
-          '67': '《采槟榔》',
-          '68': '槟榔树',
-          '69': '3000年',
-          '70': '公元前10,000年',
-          '71': '槟榔树',
-          '72': '8~10月'
-          }
+ktList = {"1":1,"2":1,"3":1,"4":1,"5":4,"6":1,"7":1,"8":1,"9":1,"10":1,"11":1,"12":1,"13":2,"14":1,"15":2,"16":1,"17":2,"18":2,"19":1,"20":1,"21":4,"22":1,"23":4,"24":1,"25":3,"26":1,"27":4,"28":1,"29":4,"30":4,"31":1,"32":4,"33":1,"34":1,"35":1,"36":1,"37":4,"38":1,"39":3,"40":4,"41":2,"42":1,"43":2,"44":4,"45":4,"46":2,"47":1,"48":1,"49":1,"50":2,"51":4,"52":4,"53":1,"54":3,"55":3,"56":4,"57":4,"58":4,"59":1,"60":4,"61":1,"62":1,"63":1,"64":2,"65":1,"66":3,"67":1,"68":1,"69":4,"70":4,"71":4,"72":1,"73":4,"74":2,"75":4,"76":4,"77":4,"78":1,"79":2,"80":1,"81":2,"82":3,"83":3,"84":4,"85":1,"86":2,"87":3,"88":2,"89":4,"90":2,"91":4,"92":3,"93":4,"94":2,"95":3,"96":2,"97":3,"98":2,"99":4,"100":4,"101":4,"102":3,"103":4,"104":4,"105":4,"106":4}
+# ktList = {'1': '正确',
+#           '2': '正确',
+#           '3': '正确',
+#           '4': '正确',
+#           '5': '以上都是',
+#           '6': '正确',
+#           '7': '正确',
+#           '8': '正确',
+#           '9': '正确',
+#           '10': '正确',
+#           '11': '正确',
+#           '12': '正确',
+#           '13': '正确',
+#           '14': '正确',
+#           '15': '正确',
+#           '16': '正确',
+#           '17': '正确',
+#           '18': '正确',
+#           '19': '正确',
+#           '20': '全国销量领先',
+#           '21': '以上全是',
+#           '22': '正确',
+#           '23': '7',
+#           '24': '正确',
+#           '25': '中国海南',
+#           '26': '正确',
+#           '27': '22道',
+#           '28': '正确',
+#           '29': '以上都是',
+#           '30': '以上都是',
+#           '31': '正确',
+#           '32': '100%',
+#           '33': '高端槟榔',
+#           '34': '正确',
+#           '35': '正确',
+#           '36': '正确',
+#           '37': '海南嫩青果',
+#           '38': '海南嫩青果',
+#           '39': '嫩青果',
+#           '40': '嫩青果',
+#           '41': '海南',
+#           '42': '正确',
+#           '43': '全国高端销量领先',
+#           '44': '以上都是',
+#           '45': '中国海南',
+#           '46': '槟榔、椰子、橡胶',
+#           '47': '正确',
+#           '48': '正确',
+#           '49': '正确',
+#           '50': '槟榔',
+#           '51': '槟榔',
+#           '52': '以上都是',
+#           '53': '槟榔',
+#           '54': '槟榔树',
+#           '55': '槟榔树',
+#           '56': '以上都是',
+#           '57': '马来西亚',
+#           '58': '5~6年',
+#           '59': '槟榔之乡',
+#           '60': '以上都是',
+#           '61': '正确',
+#           '62': '正确',
+#           '63': '正确',
+#           '64': '槟榔',
+#           '65': '槟榔',
+#           '66': '槟榔树',
+#           '67': '《采槟榔》',
+#           '68': '槟榔树',
+#           '69': '3000年',
+#           '70': '公元前10,000年',
+#           '71': '槟榔树',
+#           '72': '8~10月',
+#           '73': '',# 口味王首创_____口味槟榔？ ##4
+#           '74': '错误',#槟榔品牌中，“口味王”槟榔是全国【高端销量领先】吗？ '正确', '错误'
+#           '75': '以上都是',# 口味王”槟榔曾【冠名】哪一年的《湖南卫视春节联欢晚会》 '2017年', '2018年', '2019年', '以上都是'
+#           '76': '这!就是街舞4',# “口味王”槟榔曾赞助过哪个综艺节目？
+#           '77': '以上都是',# 口味王”槟榔曾赞助过哪个电视剧？ '《将夜2》', '《鬼吹灯之龙岭迷窟》', '《巡回检查组》', '以上都是'
+#           '78': '《这！就是灌篮3》',# “口味王”槟榔曾【冠名】过哪个综艺节目 '《这！就是灌篮3》', '《这！就是街舞4》', '《欢乐喜剧人5》', '以上都是'
+#           '79': '',
+#           '80': '',
+#           '81': '2002年', #中国男足曾在哪一年进入世界杯决赛圈？ '1998年', '2002年', '2006年', '2010年'
+#           '82': '',
+#           '83': '西班牙',#2002年韩日世界杯，东道主韩国队淘汰了哪支欧洲劲旅历史性地打入四强？ '英格兰', '意大利', '西班牙', '葡萄牙'
+#           '84': '',#
+#           '85': '俄罗斯',# 2018年世界杯在哪个国家举办？ '俄罗斯', '巴西', '南非', '德国'
+#           '86': '',
+#           '87': '南非',#2010年世界杯在哪个国家举办？
+#           '88': '巴西队',#夺得世界杯次数最多的欧洲球队是哪个队？
+#           '89': '蓝色',#意大利队的传统球衣是什么颜色? '白色', '绿色', '红色', '蓝色'
+#           '90': '',
+#           '91': '荷兰',#无冕之王”是形容哪支球队的？ '西班牙', '葡萄牙', '英格兰', '荷兰'
+#           '92': '',
+#           '93': '乌拉圭',# 第一届世界杯冠军是谁? '意大利', '智利', '巴西', '乌拉圭'
+#           '94': '',
+#           '95': '蹴鞠',#我国古代足球称为什么？
+#           '96': '',
+#           '97': '朝鲜',#第一支打入世界杯八强的亚洲球队是哪一队？ '韩国', '日本', '朝鲜', '马来西亚'
+#           '98': '',
+#           '99': '20亿',#口味王“狂欢世界杯”活动累计派发多少积分？ '10亿', '5亿', '15亿', '20亿'
+#           '100': '',
+#           '101': '20',#口味王“狂欢世界杯”活动累计派发多少台华为Mate 50 Pro手机？ '5', '10', '15', '20'
+#           '102': '',#口味王“狂欢世界杯”活动从什么时间开始派发华为Mate 50 Pro手机？
+#           '103': '以上都是',#口味王“狂欢世界杯”有哪些活动？'冠军竞猜', '赛事竞猜', '点球大战', '以上都是'
+#           '104': '',
+#           '105': '以上都是',#世界杯期间，口味王在以下哪些城市举办线下活动？ 长沙、济南、海口', '武汉、青岛、南宁', '杭州、成都、佛山', '以上都是'
+#           '106': '',
+#           '107': '',
+#           '108': '',
+#           '109': '',
+#           '110': '',
+#           '111': '',
+#           '112': '',
+#           '113': '',
+#           '114': '',
+#           '115': '',
+#           '116': '',
+#           '117': '',
+#           '118': '',
+#           '119': '',
+#           '120': '',
+#           '121': '',
+#           '122': '',
+#           '123': '',
+#           '124': '',
+#           '125': '',
+#           '126': '',
+#           '127': '',
+#           '128': '',
+#           '129': '',
+#           '130': '',
+#           '131': '',
+#           '132': '',
+#           '133': '',
+#           '134': '',
+#           '135': '',
+#           '136': '',
+#           '137': '',
+#           '138': '',
+#           '139': '',
+#           '140': '',
+#           '141': '',
+#           '142': '',
+#           '143': '',
+#           '144': '',
+#           '145': '',
+#           '146': '',
+#           '147': '',
+#           '148': '',
+#           '149': '',
+#           }
 
 '''
 ====================== 请求 ===========================
@@ -191,7 +199,226 @@ def getApiR(url, headers):
     return requests.get(url=url, headers=headers, allow_redirects=False, timeout=300)
 
 
+def getkey(kww):
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+
+
+    response = requests.get('https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/index?opId=202214587511596&dbnewopen&from=login&spm=89420.1.1.1', headers=headers)
+    if response.status_code == 200:
+        key1 = re.search(r'key\: \'(\S+)\'', response.text,re.M|re.I)
+        key = key1.group(1)
+        # print(key)
+        return key
+    else:
+        print(response.text)
+
+def haidaostart(kww):
+    url = "https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/start?__ts__=1668168666619"
+    payload="opId=202214587511596"
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+    result = requests.request("POST", url, headers=headers, data=payload).json()
+    if result['success'] == True:
+        hdoder= result['data']['orderNum']
+        hdstartid = result['data']['startId']
+        return hdoder,hdstartid
+    else:
+        print(result['desc'])
+        return None,None
+def haidaogetOrderStatus(kww,hdstartid,hdoder):
+    url = f"https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/getOrderStatus?__ts__=1668168667092&opId=202214587511596&startId={hdstartid}&orderNum={hdoder}&type=1"
+
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+    result = requests.request("GET", url, headers=headers).json()
+    if result['success'] == True:
+
+        print(result['success'])
+    else:
+        print(result)
+        return None
+def haidaostartRound(kww,hdstartid,rdinx):
+    url = "https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/startRound?__ts__=1668168667195"
+    payload=f"opId=202214587511596&startId={hdstartid}&roundIndex={rdinx}"
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+    result = requests.request("POST", url, headers=headers,data=payload).json()
+    if result['success'] == True:
+
+        print(result['success'])
+    else:
+        print(result)
+        return None
+def get_str_md5(content):
+    m = hashlib.md5(content.encode('utf-8')).hexdigest()
+    return m
+def haidaosubmit(kww,score,hdstartid,totalScore,rdinx,key):
+    signdata = f"opId=202214587511596&roundIndex={rdinx}&score={score}&startId={hdstartid}&totalScore={totalScore}&key={key}"
+    sign = get_str_md5(signdata)
+    url = "https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/submit?__ts__=1668168852399"
+    payload=f"opId=202214587511596&startId={hdstartid}&score={score}&totalScore={totalScore}&roundIndex={rdinx}&sign={sign}"
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+    result = requests.request("POST", url, headers=headers,data=payload).json()
+    if result['success'] == True:
+        print("提交OK")
+    else:
+        print(result)
+        return None
+def haidaoddrw(kww,hdstartid,rdinx):
+    url = "https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/draw?__ts__=1668168861872"
+    payload=f"opId=202214587511596&startId={hdstartid}&roundIndex={rdinx}"
+    headers = {
+        'Host': '89420.activity-20.m.duiba.com.cn',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': f'{kww}',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d33) NetType/WIFI Language/zh_CN miniProgram/wxfb0905b0787971ad',
+        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
+        'Accept-Encoding': 'gzip, deflate'
+    }
+    result = requests.request("POST", url, headers=headers,data=payload).json()
+    if result['success'] == True:
+        print(result['data']['desc'])
+    else:
+        print(result)
+        return None
+
+def getChangeCKUrl(uid):
+    url = f"https://member.kwwblcj.com/member/api/info/?userKeys=v1.0&pageName=loginFreePlugin&formName=searchForm&uid={uid}&levelCode=1&redirect=https%3A%2F%2F89420.activity-20.m.duiba.com.cn%2Fprojectx%2Fp725daef0%2Findex.html%3FappID%3D89420"
+    payload={}
+    headers = {
+        'Host': 'member.kwwblcj.com',
+        'Connection': 'keep-alive',
+        'content-type': 'application/json',
+        'Accept-Encoding': 'gzip,deflate',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d34) NetType/WIFI Language/zh_CN',
+        'Referer': 'https://servicewechat.com/wxfb0905b0787971ad/29/page-frame.html',
+    }
+    response = requests.request("GET", url, headers=headers, data=payload).json()
+    return response['result']
+
+def getCookie(url):
+    session = requests.Session()
+    session.get(url)
+    ckDict = session.cookies.get_dict()
+    cookie_value = ''
+    for a,b in ckDict.items():
+        cookie_value += a + '=' + b + ';'
+    return cookie_value
+
 if __name__ == '__main__':
+    for i in range(len(mycookies)):
+        print("用户【" + mycookies[i] + "】")
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+        print("【答题任务】")
+        url = 'https://member.kwwblcj.com/member/api/info/?userKeys=v1.0&pageName=loginFreePlugin&formName=searchForm&uid=' + \
+              mycookies[
+                  i] + '&levelCode=K1&redirect=https%3A%2F%2F89420.activity-20.m.duiba.com.cn%2Fprojectx%2Fp129446ea%2Findex.html%3FappID%3D89420'
+        res = getApi(url, headers)
+        cookie = getApiR(res['result'], headers).headers.get('Set-Cookie')
+        cookieList = cookie.split(";")
+        cookie_wdata4 = ''
+        cookie_w_ts = ''
+        cookie__ac = ''
+        for ii in range(len(cookieList)):
+            if cookieList[ii].find('wdata4') != -1:
+                cookie_wdata4 = cookieList[ii]
+            if cookieList[ii].find('w_ts') != -1:
+                cookie_w_ts = cookieList[ii]
+            if cookieList[ii].find('_ac') != -1:
+                cookie__ac = cookieList[ii]
+
+        Cookie = cookie_wdata4 + ";" + cookie_w_ts + ";" + cookie__ac
+        Cookie = Cookie.replace("HttpOnly,", "")
+        headers = {
+            'Cookie': Cookie,
+        }
+        res = getApi(
+            'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/start.do?user_type=0&is_from_share=1&_t=' + str(
+                time.time()), headers)
+        startId = str(res['data'])
+        if startId == 'None':
+            print("今日已答题")
+        else:
+            i = 1
+            while i < 6:
+                i += 1
+                url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/getQuestion.do?startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(
+                    time.time())
+                res = getApi(url, headers)
+                print("题目ID：" + res['data']['id'] + " > " + res['data']['content'])
+                answerList = res['data']['answerList']
+                print(str(answerList))
+                dt = False
+                try:
+                    print('提交答案 > 提交值 :' + str(ktList.get(res['data']['id']) + 1))
+                    url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/submit.do?answer=' + str(
+                        ktList.get(res['data']['id'])) + '&startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(time.time())
+                    res = getApi(url, headers)
+                    if res['data']['correct']:
+                        print("回答正确" if res['data']['correct'] else "回答错误")
+                    elif res['message'] == '重复提交':
+                        print("已全部答完")
+                except Exception as e:
+                    print(e, "\n答题异常错误")
+                    continue
+        # 领取奖励
+        url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/complete.do?startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(
+            time.time())
+        res = getApi(url, headers)
+        print("领取答题奖励")
+        url = 'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=select-member-score&formName=searchForm&memberId=' + \
+              mycookies[i]
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+        res = getApi(url, headers)
+    print("\n")
     for i in range(len(mycookies)):
         print("用户【" + mycookies[i] + "】")
         url = 'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=select-member-score&formName=searchForm&memberId=' + \
@@ -201,8 +428,7 @@ if __name__ == '__main__':
         }
         res = getApi(url, headers)
         print("积分剩余 : " + str(res['rows'][0]))
-        if int(res['rows'][0]) >= 888:
-            print("积分大于 888 分，请去微信公众号【口味王】兑换红包")
+        addJf = int(res['rows'][0])
         print("【每日签到】")
         res = getApi(
             'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=selectSignInfo&formName=searchForm&memberId=' +
@@ -263,95 +489,24 @@ if __name__ == '__main__':
             'https://member.kwwblcj.com/member/api/list/?userKeys=v1.0&pageName=activeTaskFlag&formName=editForm&memberId=' +
             mycookies[i] + '&userCname=JDWXX', headers)
         print("收青果日期：" + jf['rows'][0])
-        print("【答题任务】")
-        url = 'https://member.kwwblcj.com/member/api/info/?userKeys=v1.0&pageName=loginFreePlugin&formName=searchForm&uid=' + \
-              mycookies[
-                  i] + '&levelCode=K1&redirect=https%3A%2F%2F89420.activity-20.m.duiba.com.cn%2Fprojectx%2Fp129446ea%2Findex.html%3FappID%3D89420'
-        res = getApi(url, headers)
-        cookie = getApiR(res['result'], headers).headers.get('Set-Cookie')
-        cookieList = cookie.split(";")
-        cookie_wdata4 = ''
-        cookie_w_ts = ''
-        cookie__ac = ''
-        for ii in range(len(cookieList)):
-            if cookieList[ii].find('wdata4') != -1:
-                cookie_wdata4 = cookieList[ii]
-            if cookieList[ii].find('w_ts') != -1:
-                cookie_w_ts = cookieList[ii]
-            if cookieList[ii].find('_ac') != -1:
-                cookie__ac = cookieList[ii]
-        Cookie = cookie_wdata4 + ";" + cookie_w_ts + ";" + cookie__ac
-        Cookie = Cookie.replace("HttpOnly,", "")
-        headers = {
-            'Cookie': Cookie,
-        }
-        res = getApi(
-            'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/start.do?user_type=0&is_from_share=1&_t=' + str(
-                time.time()), headers)
-        startId = str(res['data'])
-        if startId == 'None':
-            print("今日已答题")
-            continue
-        i = 1
-        while i < 6:
-            i += 1
-            url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/getQuestion.do?startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(
-                time.time())
-            res = getApi(url, headers)
-            print("题目ID：" + res['data']['id'] + " > " + res['data']['content'])
-            answerList = res['data']['answerList']
-            print(str(answerList))
-            dt = False
-            for jj in range(len(answerList)):
-                if answerList[jj].find(ktList.get(res['data']['id'])) != -1 and ktList.get(res['data']['id']) != '':
-                    print('找到答案 >' + ktList.get(res['data']['id']))
-                    print('提交答案 > 提交值 >' + str(jj + 1))
-                    url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/submit.do?answer=' + str(
-                        jj + 1) + '&startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(time.time())
-                    res = getApi(url, headers)
-                    if res['data']['correct']:
-                        print("回答正确" if res['data']['correct'] else "回答错误")
-                    elif res['message'] == '重复提交':
-                        print("已全部答完")
-                    dt = True
-                    break
-            if not dt:
-                for jj in range(len(answerList)):
-                    print(answerList[jj])
-                    print(ktList.get(res['data']['id']))
-                    if answerList[jj].find("正确") != -1 \
-                            or answerList[jj].find("槟榔") != -1 \
-                            or answerList[jj].find("海南") != -1 \
-                            or answerList[jj].find("100%") != -1 \
-                            or answerList[jj].find("中国") != -1 \
-                            or answerList[jj].find("全国") != -1 \
-                            or answerList[jj].find("领先") != -1:
-                        print('未找到答案 找到默认配置规则')
-                        print('提交答案 > 提交值 >' + str(jj + 1))
-                        url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/submit.do?answer=' + str(
-                            jj + 1) + '&startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(time.time())
-                        res = getApi(url, headers)
-                        if res['data']['correct']:
-                            print("回答正确" if res['data']['correct'] else "回答错误")
-                        elif res['message'] == '重复提交':
-                            print("已全部答完")
-                            break
-                        dt = True
-                        break
-            if not dt:
-                print('未找到配置')
-                print('提交答案 > 提交默认值 1')
-                url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/submit.do?answer=1&startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(
-                    time.time())
-                res = getApi(url, headers)
-                if res['data']['correct']:
-                    print("回答正确" if res['data']['correct'] else "回答错误")
-                elif res['message'] == '重复提交':
-                    print("已全部答完")
-                    break
-        # 领取奖励
-        url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/answer/complete.do?startId=' + startId + '&user_type=0&is_from_share=1&_t=' + str(
-            time.time())
-        res = getApi(url, headers)
-        print("领取答题奖励")
-        print(res)
+        time.sleep(1)
+        print("【海岛游乐场】")
+        url = getChangeCKUrl(mycookies[i])
+        ck = getCookie(url)
+        for x in range(0,3):
+            key = getkey(ck)
+            hdoder,hdstartid = haidaostart(ck)
+            if hdstartid != None and hdoder != None:
+                haidaogetOrderStatus(ck,hdstartid,hdoder)
+                haidaostartRound(ck,hdstartid,"1")
+                time.sleep(60)
+                haidaosubmit(ck,"5",hdstartid,"5","1",key)
+                haidaoddrw(ck,hdstartid,"1")
+                haidaostartRound(ck,hdstartid,"2")
+                time.sleep(60)
+                haidaosubmit(ck,"10",hdstartid,"15","2",key)
+                haidaoddrw(ck,hdstartid,"2")
+                haidaostartRound(ck,hdstartid,"3")
+                time.sleep(60)
+                haidaosubmit(ck,"15",hdstartid,"30","3",key)
+                haidaoddrw(ck,hdstartid,"3")
